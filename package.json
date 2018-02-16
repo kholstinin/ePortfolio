@@ -1,0 +1,45 @@
+{
+  "name": "eportfolio",
+  "version": "0.1.0",
+  "description": "Electron application for creating portfolio",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest-webpack",
+    "start": "./node_modules/.bin/electron .",
+    "watch": "./node_modules/.bin/webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kholstinin/ePortfolio.git"
+  },
+  "author": "Kholstinin Dmitry",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kholstinin/ePortfolio/issues"
+  },
+  "homepage": "https://github.com/kholstinin/ePortfolio#readme",
+  "dependencies": {
+    "directory-tree": "^2.0.0",
+    "electron": "^1.8.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "styled-components": "^3.1.6"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "electron-react-devtools": "^0.5.3",
+    "flow-bin": "^0.65.0",
+    "jest": "^22.3.0",
+    "jest-webpack": "^0.4.0",
+    "mocha-webpack": "^1.0.1",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1"
+  }
+}
