@@ -1,0 +1,9 @@
+[ignore]
+tests
+
+[libs]
+flow-typed
+
+[options]
+all=true
+emoji=true

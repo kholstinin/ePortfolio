@@ -23,6 +23,7 @@
     "electron": "^1.8.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "reactackle": "^1.0.0-beta.6",
     "styled-components": "^3.1.6"
   },
   "devDependencies": {
@@ -38,7 +39,6 @@
     "flow-bin": "^0.65.0",
     "jest": "^22.3.0",
     "jest-webpack": "^0.4.0",
-    "mocha-webpack": "^1.0.1",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1"
   }
