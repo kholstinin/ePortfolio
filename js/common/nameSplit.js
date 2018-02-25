@@ -6,7 +6,7 @@ type fileInfo = {
   workNumber: number,
 }
 
-export default function getInfoFromFileName(fileName: string): fileInfo {
+export function getInfoFromFileName(fileName: string): fileInfo {
     const arrOfInfo = fileName.split('_');
     const workName = arrOfInfo[3].split('.')[0];
 
@@ -20,4 +20,12 @@ export default function getInfoFromFileName(fileName: string): fileInfo {
       workType,
       workNumber,
     };
+}
+
+export function getNameWithInitials(fullName: string): string {
+  const splitName = fullName.split(' ');
+  const surname = splitName[0];
+  const initials = `${splitName[1][0]}.${splitName[2][0]}`;
+
+  return `${surname} ${initials}`
 }
