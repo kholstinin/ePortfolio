@@ -1,19 +1,19 @@
 import React from 'react';
-import Portfolio from '../common/portfolio';
+import {App} from 'reactackle';
+import Wrapper from './Container';
 
-const pathToRootDirectory = './Портфолио';
+type AppProps = {};
+type AppState = {};
 
-export default class App extends React.Component {
+export default class Entry extends React.Component<AppProps, AppState> {
   constructor() {
     super();
-    const portfolio = new Portfolio(pathToRootDirectory);
-    console.log(portfolio.getListOfStudentsInGroup('ПЕ-41б'));
   }
 
   render() {
-    return <div>
-
-    </div>
+    return (<App>
+      <Wrapper/>
+    </App>);
   }
 
 }
