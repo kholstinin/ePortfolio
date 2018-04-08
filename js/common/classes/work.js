@@ -15,8 +15,11 @@ export default class Work {
     this.needWorksNumber = needWorks[this.type];
 
     if (this.validateWorkType()) {
-      const workTypePortfolioStatus = disciplinePortfolioStatus.works.find(
-          item => item.workType === this.type);
+      let workTypePortfolioStatus = null;
+      if (disciplinePortfolioStatus) {
+        workTypePortfolioStatus = disciplinePortfolioStatus.works.find(
+            item => item.workType === this.type);
+      }
 
       this.workFiles = tree.children.map(
           file => new WorkFile(file, groupName, studentName, disciplineName,

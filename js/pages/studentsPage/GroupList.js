@@ -38,7 +38,7 @@ export default class GroupList extends React.Component {
 
   onHeaderClick = () => {
     this.setState(prevState => {
-      return {expanded: !prevState.expanded};
+      return {...prevState, expanded: !prevState.expanded};
     });
   };
 }

@@ -1,5 +1,6 @@
 class WorksHandler {
   unverifiedWorks = [];
+  wrongWorks = [];
 
   constructor() {
 
@@ -13,12 +14,17 @@ class WorksHandler {
     return this.unverifiedWorks;
   }
 
-  addWrongWork() {
-
+  addWrongWork(work: any): void {
+    this.wrongWorks.push(work);
   }
 
-  getWrongWorks() {
+  getWrongWorks(): Array<any> {
+    return this.wrongWorks;
+  }
 
+  clearAll(): void {
+    this.unverifiedWorks = [];
+    this.wrongWorks = [];
   }
 }
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import PouchDB from 'pouchdb-browser';
 import Menu from './menu/Menu';
 import initialisePortfolio from '.././common/initialisePortfolio';
 
@@ -10,6 +9,7 @@ const storage = require('electron-json-storage');
 import RouterPage from '../pages/RouterPage';
 import {storage_portfolioKey} from '../common/global';
 import Portfolio from '../common/classes/portfolio';
+import workHandler from '../common/worksHandler';
 
 const Container = styled.div`
   width: 1200px;
@@ -32,16 +32,6 @@ const SPage = styled.div`
 export default class Wrapper extends React.Component {
   constructor() {
     super();
-    // const dbUrl = 'https://79df10c6-9673-4d5f-afc4-d981ed85f629-bluemix.cloudant.com/portfolio';
-    // const db = new PouchDB(dbUrl, {
-    //   auth: {
-    //     username: 'ificandhossithollinceend',
-    //     password: '64fa85bd5e1c39214f067bf24ca344205a8f3a9f',
-    //   },
-    // });
-    // db.info().then(info => console.log(info));
-
-    //const db = new PouchDB('portfolio');
 
     this.state = {
       loading: true,
@@ -79,6 +69,7 @@ export default class Wrapper extends React.Component {
 
   updatePortfolio = () => {
     storage.get(storage_portfolioKey, (err, data) => {
+      workHandler.clearAll();
       const paths = data.paths;
 
       if (!paths || paths.length === 0) {
@@ -87,15 +78,13 @@ export default class Wrapper extends React.Component {
         const tree = dirTree(paths[0]);
         if (tree) {
           const portfolio = new Portfolio(tree);
-          initialisePortfolio(portfolio).then((val) => {
-            console.log('end portfolio', portfolio, val);
+          initialisePortfolio(portfolio).then(() => {
             this.setState({portfolio: portfolio});
           });
         } else {
           this.setState({portfolio: null});
         }
       }
-
       this.setState({loading: false});
     });
   }

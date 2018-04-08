@@ -8,6 +8,7 @@ export const SWrapper = styled.div`
   border: 1px solid #000;
   padding: 0 15px;
   font-size: 18px;
+  overflow-y: auto;
 `;
 
 export default class PageWrapper extends React.Component {

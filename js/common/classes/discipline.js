@@ -22,7 +22,11 @@ export default class Discipline {
 
     if (this._validateDisciplineName()) {
       const needWorks = this.disciplineInfo.works;
-      if (portfolioStatus.portfolio && portfolioStatus.portfolio.length) {
+      const portfolioStatusExist = portfolioStatus.portfolio &&
+          portfolioStatus.portfolio.length;
+      let disciplinePortfolioStatus = null;
+
+      if (portfolioStatusExist) {
         disciplinePortfolioStatus = portfolioStatus.portfolio.find(
             item => item.disciplineName === this.name);
         if (disciplinePortfolioStatus) {

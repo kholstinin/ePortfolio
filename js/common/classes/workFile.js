@@ -24,9 +24,10 @@ export default class WorkFile {
 
     if (workTypePortfolioStatus) {
       this.verified = !!workTypePortfolioStatus[number];
-      if (!this.verified) {
-        worksHandler.addUnverifiedWork(this);
-      }
+    }
+
+    if (!this.verified) {
+      worksHandler.addUnverifiedWork(this);
     }
 
     const workTypeAbbr = getWorkTypeAbbr(workType);

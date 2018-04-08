@@ -21,7 +21,7 @@ export default class Group extends React.Component {
     const {group} = this.props;
     return (
         <div>
-          <GroupItem onClick={this.onGroupClick}>
+          <GroupItem error={!!group.err} onClick={this.onGroupClick}>
             {group.name}
           </GroupItem>
           {this.state.expanded && Group.renderStudents(group.students)}

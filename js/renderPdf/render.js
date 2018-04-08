@@ -12,8 +12,11 @@ import {
   PageControl,
   PageNumber,
   MessageInput,
-  ButtonsWrapper
+  ButtonsWrapper,
 } from './styles';
+
+const electron = require('electron');
+const {BrowserWindow} = electron.remote;
 
 import Button from '../components/button/Button';
 
@@ -23,17 +26,19 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      loading: false,
+      loading: true,
       pageNumber: 1,
       totalPages: null,
+      currentWorkNumber: 0,
+      pathsToPdf: [],
     };
 
     require('electron').ipcRenderer.on('mainChannel', (event, params) => {
       console.log(params);
       this.setState({
         loading: false,
-        pathToPdf: params.path[0],
         widthOfPdf: params.widthOfPdf,
+        pathsToPdf: params.paths,
       });
     });
   }
@@ -59,7 +64,21 @@ class App extends React.Component {
   };
 
   render() {
-    const {pageNumber, totalPages, pathToPdf, loading, widthOfPdf} = this.state;
+    const {
+      pageNumber,
+      totalPages,
+      loading,
+      widthOfPdf,
+      pathsToPdf,
+      currentWorkNumber,
+    } = this.state;
+
+    if (loading) {
+      return null;
+    }
+
+    console.log(pathsToPdf);
+    const pathToPdf = pathsToPdf[currentWorkNumber];
     const splitPath = pathToPdf.split('\\');
     const fileName = splitPath[splitPath.length - 1];
     const fileInfo = getInfoFromFileName(fileName);
@@ -67,13 +86,13 @@ class App extends React.Component {
     return (
         <Container>
           <PdfWrapper width={widthOfPdf}>
-            {!loading && <PDF
+            <PDF
                 file={pathToPdf}
                 onDocumentComplete={this.onDocumentComplete}
                 onPageComplete={this.onPageComplete}
                 page={pageNumber}
                 fillWidth
-            />}
+            />
           </PdfWrapper>
           <Control>
             <Title>Данные о работе</Title>
@@ -95,16 +114,41 @@ class App extends React.Component {
               <BtnBlock onClick={this.handlePrevious}/>
               <PageNumber>{pageNumber}</PageNumber>
               <BtnBlock onClick={this.handleNext}/>
-              <div style={{'margin-left': '5px'}}>{' из ' + totalPages}</div>
+              <div style={{'marginLeft': '5px'}}>{' из ' + totalPages}</div>
             </PageControl>
             <MessageInput/>
             <ButtonsWrapper>
-              <Button text='Принять работу'/>
-              <Button text='Отклонить работу'/>
+              <Button onClick={this.handleWorkPassClick} text='Принять работу'/>
+              <Button onClick={this.handleWorkRejectClick}
+                      text='Отклонить работу'/>
             </ButtonsWrapper>
           </Control>
         </Container>
     );
+  }
+
+  handleWorkPassClick = () => {
+    //TODO add info in db
+    this.renderNext();
+  };
+
+  handleWorkRejectClick = () => {
+    //TODO add info in db
+    this.renderNext();
+  };
+
+  renderNext() {
+    const {currentWorkNumber, pathsToPdf} = this.state;
+    const currentWork = pathsToPdf[currentWorkNumber];
+    const currentWin = BrowserWindow.getFocusedWindow();
+
+    if (pathsToPdf.length === 1 || currentWorkNumber > pathsToPdf.length) {
+      currentWin.close();
+    }
+
+    this.setState(prevState => {
+      return {...prevState, currentWorkNumber: ++prevState.currentWorkNumber};
+    })
   }
 }
 

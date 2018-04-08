@@ -1,5 +1,4 @@
 import React from 'react';
-import PouchDB from 'pouchdb-browser';
 import Button from '../../components/button/Button';
 import GroupModal from '../../components/groupModal/GroupModal';
 import Modal from 'react-modal';
@@ -8,7 +7,8 @@ import PageWrapper from '../../components/pageWrapper/PageWrapper';
 import PageHeader from '../../components/pageHeader/PageHeader';
 
 import cyrillicToTranslit from 'cyrillic-to-translit-js';
-import {students} from '../../../tests/fakeData';
+import {studDB} from '../../common/databases';
+
 import {
   SFooter,
 } from './styles';
@@ -33,7 +33,6 @@ type TGroupInfo = {
 export default class StudentsPage extends React.Component {
   constructor() {
     super();
-    this.db = new PouchDB('students');
 
     this.fetchGroups();
 
@@ -86,8 +85,7 @@ export default class StudentsPage extends React.Component {
   };
 
   fetchGroups = () => {
-    this.db.allDocs({include_docs: true}).then(result => {
-      console.log(result);
+    studDB.allDocs({include_docs: true}).then(result => {
       this.setState({
         studentsByGroup: this.mutateDocs(result.rows),
         loading: false,
@@ -97,8 +95,8 @@ export default class StudentsPage extends React.Component {
 
   removeGroup = (id) => {
     const _id = cyrillicToTranslit().transform(id);
-    this.db.get(_id).then((doc) => {
-      return this.db.remove(doc);
+    studDB.get(_id).then((doc) => {
+      return studDB.remove(doc);
     }).then(res => {
       if (res.ok) {
         this.fetchGroups();
@@ -120,7 +118,7 @@ export default class StudentsPage extends React.Component {
 
     console.log(doc);
 
-    this.db.put(doc).then(res => {
+    studDB.put(doc).then(res => {
       if (res.ok) {
         this.fetchGroups();
       }

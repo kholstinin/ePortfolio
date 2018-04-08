@@ -57,6 +57,7 @@ const menuItems = [
   {name: 'Статус портфолио', route: 'status'},
   {name: 'Справки для печати', route: 'references'},
   {name: 'Список всех студентов', route: 'students'},
+  {name: 'Учебный план', route: 'demands'}
 ];
 
 type MenuProps = {}

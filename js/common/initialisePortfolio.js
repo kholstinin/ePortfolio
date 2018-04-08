@@ -16,8 +16,6 @@ export default function initialisePortfolio(portfolio) {
       });
     });
 
-    console.log(studentPromises);
-
     return Promise.all(studentPromises);
   });
 }

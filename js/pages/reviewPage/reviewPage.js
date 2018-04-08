@@ -5,15 +5,12 @@ import worksHandler from '../../common/worksHandler';
 import PageHeader from '../../components/pageHeader/PageHeader';
 import PageWrapper from '../../components/pageWrapper/PageWrapper';
 
+import openWorks from '../../common/openPdfModal';
 import {getInfoFromFileName} from '../../common/nameSplit';
 
 const SWorkTable = styled.div`
   display: table;
   width: 100%;
-`;
-
-const SWorkTableHeader = styled.div`
-  display: table-header-group;
 `;
 
 const SWorkTableBody = styled.div`
@@ -26,6 +23,15 @@ const SWorkTableRow = styled.div`
   
   &:hover {
     background-color: #dcdcdc;
+  }
+`;
+
+const SWorkTableHeader = styled.div`
+  display: table-header-group;
+  cursor: default;
+  
+  &:hover ${SWorkTableRow}{
+    background-color: transparent ;
   }
 `;
 
@@ -45,10 +51,13 @@ export default class ReviewPage extends React.Component {
 
   render() {
     const {works} = this.state;
-    console.log(works);
+
     return (
         <PageWrapper>
           <PageHeader text='Работы на проверку'/>
+          <a onClick={() => openWorks(this.getPathsFromWorks(works))}>
+            Начать проверять все работы
+          </a>
           <SWorkTable>
             {this.renderTableHeader()}
             <SWorkTableBody>
@@ -58,8 +67,18 @@ export default class ReviewPage extends React.Component {
         </PageWrapper>);
   }
 
+  getPathsFromWorks(works) {
+    return works.map(work => work.path);
+  }
+
   renderTableHeader() {
-    const titles = ['Группа', 'Студент', 'Дисциплина', 'Тип работы', 'Номер', 'Статус'];
+    const titles = [
+      'Группа',
+      'Студент',
+      'Дисциплина',
+      'Тип работы',
+      'Номер',
+      'Статус'];
     return (
         <SWorkTableHeader>
           <SWorkTableRow>
@@ -76,7 +95,7 @@ export default class ReviewPage extends React.Component {
     let key = 0;
 
     return (
-        <SWorkTableRow key={rowKey}>
+        <SWorkTableRow key={rowKey}  onClick={() => openWorks([work.path])}>
           <SWorkTableCell key={++key}>{workInfo.group}</SWorkTableCell>
           <SWorkTableCell key={++key}>{workInfo.name}</SWorkTableCell>
           <SWorkTableCell key={++key}>{workInfo.discipline}</SWorkTableCell>

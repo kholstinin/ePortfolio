@@ -5,16 +5,26 @@ export const STable = styled.div`
   width: 100%;
 `;
 
-export const STableHeader = styled.div`
-  display: table-header-group;
-`;
-
 export const STableBody = styled.div`
   display: table-row-group;
 `;
 
 export const STableRow = styled.div`
   display: table-row;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #eceff1 ;
+  }
+`;
+
+export const STableHeader = styled.div`
+  display: table-header-group;
+  
+  &:hover ${STableRow}{
+    cursor: default;
+    background-color: transparent ;
+  }
 `;
 
 export const STableCell = styled.div`
