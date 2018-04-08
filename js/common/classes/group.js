@@ -1,30 +1,28 @@
 import Student from './student';
-import groups from '../../../data/groups';
+import PouchDB from 'pouchdb-browser';
+import {getGroupId} from '../getId';
 
 export default class Group {
   students = [];
-  groupName = '';
-  groupsArr = [];
+  studentsTree = [];
+  name = '';
 
-  constructor(tree, groupsArr) {
-    const studentsArrTree = tree.children;
-    this.groupName = tree.name;
-
-    if (groupsArr) {
-      this.groupsArr = groupsArr;
-    } else {
-      this.groupsArr = groups.arr;
-    }
-
-    if (this._validateGroupName()) {
-      this.students = studentsArrTree.map(
-          student => new Student(student, this.groupName));
-    } else {
-      this.err = 'Нет такой группы';
-    }
+  constructor(tree) {
+    this.studentsTree = tree.children;
+    this.name = tree.name;
   }
 
-  _validateGroupName(): boolean {
-    return this.groupsArr.includes(this.groupName);
+  initialiseGroup(): Promise<any> {
+    const db = new PouchDB('students');
+    const id = getGroupId(this.name);
+
+    return db.get(id).then(doc => {
+      if (doc) {
+        this.students = this.studentsTree.map(
+            student => new Student(student, this.name, doc.students));
+      } else {
+        this.err = 'Нет такой группы';
+      }
+    });
   }
 }

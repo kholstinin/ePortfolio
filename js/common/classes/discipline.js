@@ -2,32 +2,47 @@ import disciplines from '../../../data/disciplines';
 import Work from './work';
 
 export default class Discipline {
-  disciplineName = '';
+  name = '';
   works = [];
-  disciplines = [];
+  allDisciplines = [];
+  disciplineInfo = {};
+  isDone = false;
 
-  constructor(tree: dirTree, disciplinesArr) {
-    this.disciplineName = tree.name;
+  constructor(
+      tree: dirTree, groupName: string, studentName: string, portfolioStatus,
+      disciplinesArr) {
+    this.name = tree.name;
     const worksArrTree = tree.children;
 
     if (disciplinesArr) {
-      this.disciplines = disciplinesArr;
+      this.allDisciplines = disciplinesArr;
     } else {
-      this.disciplines = disciplines.fullTime;
+      this.allDisciplines = disciplines.fullTime;
     }
+
     if (this._validateDisciplineName()) {
-      this.works = worksArrTree.map(work => new Work(work));
+      const needWorks = this.disciplineInfo.works;
+      if (portfolioStatus.portfolio && portfolioStatus.portfolio.length) {
+        disciplinePortfolioStatus = portfolioStatus.portfolio.find(
+            item => item.disciplineName === this.name);
+        if (disciplinePortfolioStatus) {
+          this.isDone = disciplinePortfolioStatus.isDone;
+        }
+      }
+
+      this.works = worksArrTree.map(
+          work => new Work(work, groupName, studentName, this.name, needWorks,
+              disciplinePortfolioStatus));
     } else {
       this.err = 'Такой дисциплины не существует';
     }
   }
 
   _validateDisciplineName(): boolean {
-    return !!this.disciplines[this.disciplineName];
-  }
+    const disciplineInfo = this.allDisciplines.find(
+        discipline => discipline.disciplineName === this.name);
+    this.disciplineInfo = disciplineInfo;
 
-  validateWorks() {
-    const needWorks = this.disciplines[this.disciplineName];
-    console.log(needWorks);
+    return !!disciplineInfo;
   }
 }

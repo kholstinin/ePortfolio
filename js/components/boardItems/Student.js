@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Discipline from './Disciplines';
+import Discipline from './Discipline';
 
-const StudentItem = styled.div`
-  font-size: 15px;
+import SBoardItem from './BoardItem';
+
+const StudentItem = SBoardItem.extend`
   margin-bottom: 2px;
   color: #000;
   padding-left: 20px;
@@ -21,7 +22,7 @@ export default class Student extends React.Component {
   render() {
     const {student} = this.props;
     return <div>
-      <StudentItem onClick={this.onStudentClick}>{student.studentName}</StudentItem>
+      <StudentItem onClick={this.onStudentClick}>{student.name}</StudentItem>
       {this.state.expanded && Student.renderDisciplines(student.disciplines)}
     </div>;
   }

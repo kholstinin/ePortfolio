@@ -1,37 +1,63 @@
 import Discipline from './discipline';
-import students from '../../../data/students';
 import {getNameWithInitials} from '../nameSplit';
+import {getStudentId} from '../getId';
+
+import PouchDB from 'pouchdb-browser';
 
 export default class Student {
   disciplines = [];
-  studentName = '';
+  name = '';
+  fullName = '';
   groupName = '';
-  studentsArr = [];
+  disciplineTree = [];
+  allStudents = [];
 
-  constructor(tree, groupName, studentsArr) {
-    const disciplineArrTree = tree.children;
-    this.studentName = tree.name;
+  constructor(tree, groupName, allStudents) {
+    this.disciplineTree = tree.children;
+    this.name = tree.name;
     this.groupName = groupName;
+    this.allStudents = allStudents;
+  }
 
-    if (studentsArr) {
-      this.studentsArr = studentsArr;
-    } else {
-      this.studentsArr = students;
-    }
-
+  initialiseStudent() {
     if (this._validateStudentName()) {
-      this.disciplines = disciplineArrTree.map(
-          discipline => new Discipline(discipline));
+      const db = new PouchDB('portfolio');
+      const id = getStudentId(this.groupName, this.fullName);
+
+      return db.get(id).catch(err => {
+        if (err.name === 'not_found') {
+          const doc = {
+            _id: id,
+            name: this.fullName,
+            group: this.groupName,
+            portfolio: [],
+          };
+
+          db.put(doc);
+          return doc;
+        }
+      }).then(portfolioStatus => {
+        this.disciplines = this.disciplineTree.map(
+            discipline => {
+              console.log(portfolioStatus);
+              return new Discipline(discipline, this.groupName, this.name,
+                  portfolioStatus);
+            },
+        );
+      });
+
     } else {
       this.err = 'Нет такого студента';
     }
   }
 
   _validateStudentName(): boolean {
-    const studentsInGroup = this.studentsArr[this.groupName];
-    return !!studentsInGroup.find((studentFullName) => {
+    const fullName = this.allStudents.find((studentFullName) => {
       const nameWithInitials = getNameWithInitials(studentFullName);
-      return nameWithInitials === this.studentName;
-    })
+      return nameWithInitials === this.name;
+    });
+    this.fullName = fullName;
+
+    return !!fullName;
   }
 }

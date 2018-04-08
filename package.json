@@ -4,9 +4,11 @@
   "description": "Electron application for creating portfolio",
   "main": "main.js",
   "scripts": {
-    "test": "jest-webpack",
+    "test": "jest",
     "start": "./node_modules/.bin/electron .",
-    "watch": "./node_modules/.bin/webpack-dev-server"
+    "watch": "./node_modules/.bin/webpack --mode development -w",
+    "build": "./node_modules/.bin/webpack --mode production -d",
+    "serve": "webpack-dev-server --mode development"
   },
   "repository": {
     "type": "git",
@@ -19,27 +21,33 @@
   },
   "homepage": "https://github.com/kholstinin/ePortfolio#readme",
   "dependencies": {
+    "cyrillic-to-translit-js": "^2.0.0",
     "directory-tree": "^2.0.0",
-    "electron": "^1.8.2",
+    "electron": "^1.8.3",
+    "electron-json-storage": "^4.0.2",
+    "pouchdb-browser": "^6.4.3",
+    "pouchdb-find": "^6.4.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "reactackle": "^1.0.0-beta.6",
-    "styled-components": "^3.1.6"
+    "react-modal": "^3.3.2",
+    "react-pdf-js": "^3.0.7",
+    "styled-components": "^3.2.1"
   },
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "babel-loader": "^7.1.4",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "electron-react-devtools": "^0.5.3",
-    "flow-bin": "^0.65.0",
-    "jest": "^22.3.0",
-    "jest-webpack": "^0.4.0",
-    "webpack": "^3.11.0",
-    "webpack-dev-server": "^2.11.1"
+    "electron-rebuild": "^1.7.3",
+    "flow-bin": "^0.67.1",
+    "jest": "^22.4.2",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.11",
+    "webpack-dev-server": "^3.1.1"
   }
 }

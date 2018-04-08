@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Work from './Works';
+import Work from './Work';
+import SBoardItem from './BoardItem';
 
-const DisciplineItem = styled.div`
-  font-size: 15px;
-  margin-bottom: 2px;
-  color: #000;
+const DisciplineItem = SBoardItem.extend`
   padding-left: 30px;
 `;
 
@@ -22,8 +20,8 @@ export default class Student extends React.Component {
     const {discipline} = this.props;
 
     return <div>
-      <DisciplineItem onClick={this.onDisciplineClick}>
-        {discipline.disciplineName}
+      <DisciplineItem isDone={discipline.isDone} onClick={this.onDisciplineClick}>
+        {discipline.name}
       </DisciplineItem>
       {this.state.expanded && Student.renderWorks(discipline.works)}
     </div>;

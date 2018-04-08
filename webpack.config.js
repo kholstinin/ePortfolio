@@ -7,15 +7,16 @@ const APP_DIR = path.resolve(__dirname, 'js');
 module.exports = {
   entry: {
     app: ['webpack/hot/dev-server', './js/entry.js'],
+    pdfView: './js/renderPdf/render',
   },
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].js',
     publicPath: 'http://localhost:8080/built/'
   },
 
-  target: "electron",
+  target: "electron-main",
 
   devServer: {
     contentBase: './dist',
@@ -23,7 +24,7 @@ module.exports = {
   },
 
   module : {
-    loaders : [
+    rules : [
       {
         test : /\.js/,
         include : APP_DIR,

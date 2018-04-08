@@ -1,14 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Entry from "./components/App.jsx";
+const storage = require('electron-json-storage');
+import {injectGlobal} from 'styled-components';
+//PouchDB.plugin(require('pouchdb-find'));
 
-import {
-  injectGlobalStyle,
-  injectResetStyle,
-} from 'reactackle';
+import App from './components/App';
 
-injectGlobalStyle();
-injectResetStyle();
+injectGlobal`
+  *, *:before, *:after {
+    box-sizing: border-box;
+  }
 
-ReactDOM.render(<Entry />, document.getElementById('content'));
+  body {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  html, body: {
+    height: 100%;
+  }
+`;
+
+const currentPath = process.cwd();
+storage.setDataPath(currentPath + '/storage');
+
+ReactDOM.render(<App/>, document.getElementById('content'));

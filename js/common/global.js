@@ -1,0 +1,1 @@
+export const storage_portfolioKey = 'pathsToPortfolio';

@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Student from './Student';
+import SBoardItem from './BoardItem';
 
-const GroupItem = styled.div`
-  font-size: 15px;
+const GroupItem = SBoardItem.extend`
   margin-bottom: 5px;
   color: #000;
 `;
@@ -22,7 +22,7 @@ export default class Group extends React.Component {
     return (
         <div>
           <GroupItem onClick={this.onGroupClick}>
-            {group.groupName}
+            {group.name}
           </GroupItem>
           {this.state.expanded && Group.renderStudents(group.students)}
         </div>);
