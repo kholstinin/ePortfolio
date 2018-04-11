@@ -1,0 +1,1 @@
+export const pageColor = '#5c6bc0';

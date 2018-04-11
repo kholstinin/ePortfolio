@@ -4,7 +4,7 @@ import {getStudentId} from '../getId';
 
 import worksHandler from '../worksHandler';
 
-import {portfolioDB} from '../databases';
+import {portfDB} from '../databases';
 
 export default class Student {
   disciplines = [];
@@ -27,7 +27,7 @@ export default class Student {
     if (this._validateStudentName()) {
       const id = getStudentId(this.groupName, this.fullName);
 
-      return portfolioDB.get(id).catch(err => {
+      return portfDB.get(id).catch(err => {
         if (err.name === 'not_found') {
           const doc = {
             _id: id,
@@ -36,7 +36,7 @@ export default class Student {
             portfolio: [],
           };
 
-          db.put(doc);
+          portfDB.put(doc);
           return doc;
         }
       }).then(portfolioStatus => {

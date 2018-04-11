@@ -1,76 +1,92 @@
 import React from 'react';
-import Button from '../../components/button/Button';
-import GroupModal from '../../components/groupModal/GroupModal';
-import Modal from 'react-modal';
+import styled from 'styled-components';
+import AddGroupModal from '../../components/modals/groupModal/AddGroupModal';
+import Modal from '../../components/modal/Modal';
+import GroupList from './groupList/GroupList';
+import GroupInfo from './groupInfo/GroupInfo';
 
-import PageWrapper from '../../components/pageWrapper/PageWrapper';
-import PageHeader from '../../components/pageHeader/PageHeader';
+import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 
-import cyrillicToTranslit from 'cyrillic-to-translit-js';
+import {splitStudent, getDocs} from '../../common/utils';
 import {studDB} from '../../common/databases';
-
-import {
-  SFooter,
-} from './styles';
-import GroupList from './GroupList';
-
-Modal.setAppElement('#content');
+import {getGroupId} from '../../common/getId';
 
 const modalStyles = {
-  overlay: {
-    left: '200px',
-    right: '200px',
+  content: {
+    width: '700px',
+    margin: '0 auto',
   },
 };
 
-type TGroupInfo = {
-  groupName: string,
-  students: Array<string>,
-  faculty: string,
-  direction: string,
-}
+const SPageContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  padding-top: 80px;
+`;
 
 export default class StudentsPage extends React.Component {
-  constructor() {
-    super();
-
-    this.fetchGroups();
+  constructor(props) {
+    super(props);
 
     this.state = {
       studentsByGroup: [],
       groupModalVisible: false,
       studentsModalVisible: false,
       loading: false,
+      groupInput: '',
+      selectedGroupName: '',
     };
   }
 
-  render() {
-    const {studentsByGroup} = this.state;
-    console.log(studentsByGroup);
-
-    return <PageWrapper>
-      <Modal
-          isOpen={this.state.groupModalVisible}
-          contentLabel='Добавить группу'
-          onRequestClose={this.closeGroupModal}
-          style={modalStyles}
-      >
-        <GroupModal
-            closeModal={this.closeGroupModal}
-            addGroup={this.addGroup}
-        />
-      </Modal>
-      <PageHeader text='Список всех студентов'/>
-      {studentsByGroup.length
-          ? studentsByGroup.map(
-              (group, index) => <GroupList group={group}
-                                           removeGroup={this.removeGroup}
-                                           key={index}/>) : null}
-      <SFooter>
-        <Button onClick={this.openGroupModal} text='Добавить группу'/>
-      </SFooter>
-    </PageWrapper>;
+  componentDidMount() {
+    this.fetchGroups();
   }
+
+  render() {
+    const {studentsByGroup, groupInput, selectedGroupName} = this.state;
+
+    return (
+        <PageWrapper>
+          <Modal
+              modalVisible={this.state.groupModalVisible}
+              title='Добавить группу'
+              onRequestClose={this.closeGroupModal}
+              styles={modalStyles}
+          >
+            <AddGroupModal
+                closeModal={this.closeGroupModal}
+                addGroup={this.addGroup}
+            />
+          </Modal>
+          <PageHeader text='Список всех студентов'/>
+          <PageContent noPadding>
+            <SPageContent>
+              <GroupList
+                  studentsByGroup={studentsByGroup}
+                  onListItemClick={this.onListItemClick}
+                  groupInput={groupInput}
+                  addGroup={this.openGroupModal}
+              />
+              <GroupInfo
+                  selectedGroupName={selectedGroupName}
+                  group={this.getSelectedGroup()}
+                  addStudent={this.addStudent}
+                  removeStudent={this.removeStudent}
+                  editStudent={this.editStudent}
+                  removeGroup={this.removeGroup}
+              />
+            </SPageContent>
+          </PageContent>
+        </PageWrapper>
+    );
+  }
+
+  onListItemClick = (groupName: string): void => {
+    this.setState({
+      selectedGroupName: groupName,
+    });
+  };
 
   openGroupModal = () => {
     this.setState({groupModalVisible: true});
@@ -80,22 +96,26 @@ export default class StudentsPage extends React.Component {
     this.setState({groupModalVisible: false});
   };
 
-  mutateDocs = (arrOfDocs) => {
-    return arrOfDocs.map(item => item.doc);
+  getSelectedGroup = () => {
+    const {studentsByGroup, selectedGroupName} = this.state;
+    return studentsByGroup.find(group => group.name === selectedGroupName);
   };
 
   fetchGroups = () => {
     studDB.allDocs({include_docs: true}).then(result => {
+      const studentsByGroup = getDocs(result.rows);
+
       this.setState({
-        studentsByGroup: this.mutateDocs(result.rows),
+        studentsByGroup,
         loading: false,
       });
     });
   };
 
-  removeGroup = (id) => {
-    const _id = cyrillicToTranslit().transform(id);
-    studDB.get(_id).then((doc) => {
+  removeGroup = (groupName) => {
+    const id = getGroupId(groupName);
+
+    studDB.get(id).then((doc) => {
       return studDB.remove(doc);
     }).then(res => {
       if (res.ok) {
@@ -104,27 +124,75 @@ export default class StudentsPage extends React.Component {
     });
   };
 
-  addGroup = (group: TGroupInfo) => {
-    this.setState({loading: true});
-
-    const id = cyrillicToTranslit().transform(group.groupName);
+  addGroup = (group) => {
+    const id = getGroupId(group.groupName);
     const doc = {
       _id: id,
       name: group.groupName,
       students: group.students,
-      faculty: group.faculty,
+      profile: group.profile,
       direction: group.direction,
+      type: group.type,
     };
 
-    console.log(doc);
-
     studDB.put(doc).then(res => {
+      console.log(res);
       if (res.ok) {
         this.fetchGroups();
       }
     }).catch(err => {
-      console.log(err);
+      //TODO
     });
+  };
+
+  addStudent = (newStudent: string) => {
+    const id = getGroupId(this.state.selectedGroupName);
+
+    studDB.get(id).then((doc) => {
+      const oldStudents = doc.students;
+      const newStudents = oldStudents.concat(splitStudent(newStudent));
+      const newDoc = {...doc, students: newStudents};
+
+      studDB.put(newDoc).then(res => {
+        if (res.ok) {
+          this.fetchGroups();
+        }
+      }).catch(err => {
+        //TODO
+      });
+    });
+  };
+
+  removeStudent = (studentName: string) => {
+    const id = getGroupId(this.state.selectedGroupName);
+
+    studDB.get(id).then((doc) => {
+      let newStudents = doc.students.map(item => item);
+      const indexOfStudent = doc.students.findIndex(student => {
+        //TODO add func to compare
+        return student.name === studentName.name &&
+            student.surname === studentName.surname &&
+            student.patronymic === studentName.patronymic;
+      });
+
+      newStudents.splice(indexOfStudent, 1);
+      console.log(newStudents);
+      const newDoc = {...doc, students: newStudents};
+      console.log(newDoc);
+
+      studDB.put(newDoc).then(res => {
+        console.log(res);
+        if (res.ok) {
+          this.fetchGroups();
+        }
+      }).catch(err => {
+        //TODO
+      });
+    });
+  };
+
+  editStudent = (oldName: string, newName: string, group) => {
+
   };
 };
 

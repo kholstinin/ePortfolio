@@ -2,11 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import worksHandler from '../../common/worksHandler';
 
-import PageHeader from '../../components/pageHeader/PageHeader';
-import PageWrapper from '../../components/pageWrapper/PageWrapper';
+import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 
 import openWorks from '../../common/openPdfModal';
 import {getInfoFromFileName} from '../../common/nameSplit';
+
+const STableWrapper = styled.div`
+  height: 600px;
+  overflow-y: auto;
+`;
 
 const SWorkTable = styled.div`
   display: table;
@@ -41,9 +45,15 @@ const SWorkTableCell = styled.div`
   border-bottom: 1px solid #000;
 `;
 
+const SControls = styled.div`
+  width: 100%;
+  height: 80px;
+`;
+
 export default class ReviewPage extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       works: worksHandler.getUnverifiedWorks(),
     };
@@ -55,15 +65,21 @@ export default class ReviewPage extends React.Component {
     return (
         <PageWrapper>
           <PageHeader text='Работы на проверку'/>
-          <a onClick={() => openWorks(this.getPathsFromWorks(works))}>
-            Начать проверять все работы
-          </a>
-          <SWorkTable>
-            {this.renderTableHeader()}
-            <SWorkTableBody>
-              {works.map((work, index) => this.renderWork(work, index))}
-            </SWorkTableBody>
-          </SWorkTable>
+          <PageContent>
+            <SControls>
+              <a onClick={() => openWorks(this.getPathsFromWorks(works))}>
+                Начать проверять все работы
+              </a>
+            </SControls>
+            <STableWrapper>
+              <SWorkTable>
+                {this.renderTableHeader()}
+                <SWorkTableBody>
+                  {works.map((work, index) => this.renderWork(work, index))}
+                </SWorkTableBody>
+              </SWorkTable>
+            </STableWrapper>
+          </PageContent>
         </PageWrapper>);
   }
 
@@ -95,7 +111,7 @@ export default class ReviewPage extends React.Component {
     let key = 0;
 
     return (
-        <SWorkTableRow key={rowKey}  onClick={() => openWorks([work.path])}>
+        <SWorkTableRow key={rowKey} onClick={() => openWorks([work.path])}>
           <SWorkTableCell key={++key}>{workInfo.group}</SWorkTableCell>
           <SWorkTableCell key={++key}>{workInfo.name}</SWorkTableCell>
           <SWorkTableCell key={++key}>{workInfo.discipline}</SWorkTableCell>

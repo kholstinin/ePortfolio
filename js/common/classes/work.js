@@ -1,11 +1,11 @@
-import works from '../../../data/works';
+import workTypes from '../../../data/workTypes';
 import WorkFile from './workFile';
 
 export default class Work {
   type = '';
   numberOfWorks = 0;
   workFiles = [];
-  needWorksNumber = 0;
+  needWorks = {};
 
   constructor(
       tree: dirTree, groupName: string, studentName: string,
@@ -25,17 +25,20 @@ export default class Work {
           file => new WorkFile(file, groupName, studentName, disciplineName,
               this.type, workTypePortfolioStatus));
 
-      if (!this.validateNumberOfWork()) {
-        this.err = 'Количество работ не соответствует требуемому';
-      }
+      // if (!this.validateNumberOfWork()) {
+      //   this.err = 'Количество работ не соответствует требуемому';
+      // }
     } else {
       this.err = 'Неверое название папки';
     }
   }
 
+  initialiseWorkFiles() {
+
+  }
+
   validateWorkType(): boolean {
-    //return works.possibleWorkTypes.include(this.type);
-    return true;
+    return workTypes.findIndex(type => type === this.type) !== -1;
   }
 
   validateNumberOfWork(): boolean {

@@ -11,8 +11,8 @@ const WorkFile = SBoardItem.extend`
 `;
 
 export default class WorkType extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       expanded: false,
     };
@@ -20,6 +20,11 @@ export default class WorkType extends React.Component {
 
   render() {
     const {workFile} = this.props;
+
+    if (workFile.err) {
+      return null;
+    }
+
     return <div>
       <WorkFile verified={workFile.verified} onClick={() => openWorks([this.props.workFile.path])}>
         {workFile.name}

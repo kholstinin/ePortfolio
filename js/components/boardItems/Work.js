@@ -12,8 +12,8 @@ const WorkItem = SBoardItem.extend`
 `;
 
 export default class WorkType extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       expanded: false,
     };
@@ -21,6 +21,11 @@ export default class WorkType extends React.Component {
 
   render() {
     const {work} = this.props;
+
+    if (work.err) {
+      return null;
+    }
+
     return <div>
       <WorkItem onClick={this.onWorkClick}>
         {work.type}

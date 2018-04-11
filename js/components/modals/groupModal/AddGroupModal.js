@@ -1,12 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '../../components/button/Button';
+import Button from '../../button/Button';
 
-const modalHaderHeight = 40;
+import SelectInput from '../../selectInput/SelectInput';
+import {
+  getStudyTypes,
+  splitStudent,
+} from '../../../common/utils';
+
+const modalHeaderHeight = 40;
 const SModalHeader = styled.div`
   width: 100%;
-  height: ${modalHaderHeight}px;
-  line-height: ${modalHaderHeight}px;
+  height: ${modalHeaderHeight}px;
+  line-height: ${modalHeaderHeight}px;
   font-size: 15px;
   text-align: center;
   margin: 10px 0;
@@ -33,14 +39,16 @@ const SLabel = styled.div`
   margin-right: 5px;
 `;
 
-export default class GroupModal extends React.Component {
-  constructor() {
-    super();
+export default class AddGroupModal extends React.Component {
+  constructor(props) {
+    super(props);
+
     this.state = {
       groupName: '',
       students: '',
-      faculty: '',
+      profile: '',
       direction: '',
+      type: '',
     };
   }
 
@@ -57,10 +65,10 @@ export default class GroupModal extends React.Component {
                       {groupName: e.target.value})}/>
             </SRow>
             <SRow>
-              <SLabel>Факультет:</SLabel>
-              <input value={this.state.faculty}
+              <SLabel>Профиль:</SLabel>
+              <input value={this.state.profile}
                      onChange={(e) => this.setState(
-                         {faculty: e.target.value})}/>
+                         {profile: e.target.value})}/>
             </SRow>
             <SRow>
               <SLabel>Направление:</SLabel>
@@ -68,6 +76,14 @@ export default class GroupModal extends React.Component {
                   value={this.state.direction}
                   onChange={(e) => this.setState(
                       {direction: e.target.value})}/>
+            </SRow>
+            <SRow>
+              <SLabel>Форма обучения:</SLabel>
+              <SelectInput
+                  width={100}
+                  options={getStudyTypes()}
+                  value={this.state.type}
+                  onItemPress={(type) => this.setState({type})}/>
             </SRow>
           </SColumn>
           <SModalHeader>
@@ -77,16 +93,21 @@ export default class GroupModal extends React.Component {
                       onChange={(e) => this.setState(
                           {students: e.target.value})}/>
           <Button text='Добавить группу' onClick={this.onAddClick}/>
-          <Button text='serialize' onClick={this.serialize}/>
         </div>);
   }
 
   serializeStudents = () => {
     const {students} = this.state;
-    const arrOfStudents = students.split('\n');
+    const arrOfFullNames = students.split('\n');
+    let arrOfStudents = [];
 
-    return arrOfStudents.sort();
-    // TODO split by space, but if length 0 try \r
+    //TODO Добавить больше валидаций
+
+    if (students !== '') {
+      arrOfStudents = arrOfFullNames.map(fullName => splitStudent(fullName));
+    }
+
+    return arrOfStudents;
   };
 
   onAddClick = () => {

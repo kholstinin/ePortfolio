@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import PageWrapper from '../../components/pageWrapper/PageWrapper';
+import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 
 export default class StatusPage extends React.Component {
   render() {
     return <PageWrapper>
-      status page
-    </PageWrapper>
+      <PageHeader text='Статус портфолио'/>
+      <PageContent>
+        status page
+      </PageContent>
+    </PageWrapper>;
   }
 }

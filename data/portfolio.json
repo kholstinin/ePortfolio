@@ -12,7 +12,8 @@
           "2": "true"
         }
       ],
-      "isDone": "false"
+      "isDone": "false",
+      "referencePrinted": "false"
     }
   ]
 }

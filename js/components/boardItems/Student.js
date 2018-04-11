@@ -12,8 +12,9 @@ const StudentItem = SBoardItem.extend`
 `;
 
 export default class Student extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       expanded: false,
     };
@@ -21,6 +22,11 @@ export default class Student extends React.Component {
 
   render() {
     const {student} = this.props;
+
+    if (student.err) {
+      return null;
+    }
+
     return <div>
       <StudentItem onClick={this.onStudentClick}>{student.name}</StudentItem>
       {this.state.expanded && Student.renderDisciplines(student.disciplines)}

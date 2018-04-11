@@ -15,10 +15,17 @@ injectGlobal`
   body {
     margin: 0;
     font-size: 16px;
+    background-color: #fafafa;
   }
   
-  html, body: {
+  html, body, #content {
     height: 100%;
+  }
+  
+  #content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 

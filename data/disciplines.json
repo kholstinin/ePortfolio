@@ -1,28 +1,28 @@
 {
-  "fullTime": [
+  "arr": [
     {
+      "_id": "fulltime_OOP",
       "disciplineFullName": "Объектно-ориентированное программирование",
       "disciplineName": "ООП",
+      "type": "fulltime",
       "works": [
         {
           "type": "Лабораторные работы",
-          "numberOfWorks": 5
+          "workNumbers": "[1, 2, 3, 4, 5, 6]"
         },
         {
           "type": "Практические работы",
-          "numberOfWorks": 3
+          "workNumbers": "[1, 2, 3]"
         },
         {
           "type": "Курсовая работа",
-          "numberOfWorks": 1
+          "workNumbers": 1
         },
         {
           "type": "Самостоятельные работы",
-          "numberOfWorks": 2
+          "workNumbers": "[1, 2]"
         }
       ]
     }
-  ],
-  "halfTime": {
-  }
+  ]
 }

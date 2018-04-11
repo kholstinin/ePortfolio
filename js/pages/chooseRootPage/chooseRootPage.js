@@ -4,13 +4,12 @@ const {shell} = require('electron');
 const storage = require('electron-json-storage');
 
 import Button from '../../components/button/Button';
-import PageWrapper from '../../components/pageWrapper/PageWrapper';
+import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 
 const remote = require('electron').remote;
 const {dialog} = remote;
 
 import {storage_portfolioKey} from '../../common/global';
-import PageHeader from '../../components/pageHeader/PageHeader';
 
 import {
   SButtonWrapper,
@@ -27,8 +26,8 @@ import {
 } from '../../components/table/TableStyles';
 
 export default class ChooseRootPage extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     storage.has(storage_portfolioKey, (err, hasKey) => {
       if (hasKey) {
         storage.get(storage_portfolioKey, (err, data) => {
@@ -47,21 +46,23 @@ export default class ChooseRootPage extends React.Component {
     return (
         <PageWrapper>
           <PageHeader text='Корневые каталоги портфолио'/>
-          <STable>
-            {this.renderHeader()}
-            {paths && paths.length ?
-                <STableBody>
-                  {paths.map((path, index) =>
-                      <STableRow key={index}>
-                        <STableCell key={0}>{path}</STableCell>
-                        {this.renderActions(path)}
-                      </STableRow>)}
-                </STableBody> : null}
-          </STable>
-          <SButtonWrapper>
-            <Button onClick={this.showDialog}
-                    text="Добавить корневой каталог портфолио"/>
-          </SButtonWrapper>
+          <PageContent>
+            <STable>
+              {this.renderHeader()}
+              {paths && paths.length ?
+                  <STableBody>
+                    {paths.map((path, index) =>
+                        <STableRow key={index}>
+                          <STableCell key={0}>{path}</STableCell>
+                          {this.renderActions(path)}
+                        </STableRow>)}
+                  </STableBody> : null}
+            </STable>
+            <SButtonWrapper>
+              <Button onClick={this.showDialog}
+                      text="Добавить корневой каталог портфолио"/>
+            </SButtonWrapper>
+          </PageContent>
         </PageWrapper>
     );
   }
@@ -107,7 +108,6 @@ export default class ChooseRootPage extends React.Component {
     paths.forEach(path => {
       if (this.state.paths.findIndex(item => item === path) === -1) {
         const newState = [path].concat(this.state.paths);
-        console.log(newState);
 
         storage.set(storage_portfolioKey, {paths: newState}, (err) => {
           if (!err) {

@@ -4,23 +4,15 @@ import Work from './work';
 export default class Discipline {
   name = '';
   works = [];
-  allDisciplines = [];
   disciplineInfo = {};
   isDone = false;
 
   constructor(
-      tree: dirTree, groupName: string, studentName: string, portfolioStatus,
-      disciplinesArr) {
+      tree: dirTree, groupName: string, studentName: string, portfolioStatus) {
     this.name = tree.name;
     const worksArrTree = tree.children;
 
-    if (disciplinesArr) {
-      this.allDisciplines = disciplinesArr;
-    } else {
-      this.allDisciplines = disciplines.fullTime;
-    }
-
-    if (this._validateDisciplineName()) {
+    if (this._validateDisciplineName(disciplines.arr)) {
       const needWorks = this.disciplineInfo.works;
       const portfolioStatusExist = portfolioStatus.portfolio &&
           portfolioStatus.portfolio.length;
@@ -42,8 +34,8 @@ export default class Discipline {
     }
   }
 
-  _validateDisciplineName(): boolean {
-    const disciplineInfo = this.allDisciplines.find(
+  _validateDisciplineName(disciplines): boolean {
+    const disciplineInfo = disciplines.find(
         discipline => discipline.disciplineName === this.name);
     this.disciplineInfo = disciplineInfo;
 

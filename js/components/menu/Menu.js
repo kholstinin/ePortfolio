@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import {pageColor} from '../../common/palette';
+
 const SMenu = styled.div`
   width: 200px;
   height: 100%;
-  border-left: 1px solid #000;
 `;
 
 const SMenuWrapper = styled.ul`
@@ -14,34 +15,35 @@ const SMenuWrapper = styled.ul`
 `;
 
 const itemHeight = 50;
+const activeColor = '#e8eaf6';
 const SMenuItem = styled.li`
   cursor: pointer;
   width: 100%;
   height: ${itemHeight}px;
   line-height: ${itemHeight}px;
-  border-bottom: 1px solid #000;
+  background-color: ${props => props.active ? activeColor  : 'transparent'}
   text-align: center;
   
   &:hover {
-        background-color: #dedede;
+        background-color: ${activeColor};
       }
 `;
 
 const SButtonsWrapper = styled.div`
   width: 100%;
-  height: 60px;
+  height: 120px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  border-bottom: 1px solid #000;
+  background-color: ${pageColor}
 `;
 
 const SRefreshButton = styled.div`
   width: 30px;
   height: 30px;
   border-radius: 4px;
-  background-color: #dedede;
+  background-color: #fff;
   cursor: pointer;
   
   &:hover {
@@ -57,7 +59,7 @@ const menuItems = [
   {name: 'Статус портфолио', route: 'status'},
   {name: 'Справки для печати', route: 'references'},
   {name: 'Список всех студентов', route: 'students'},
-  {name: 'Учебный план', route: 'demands'}
+  {name: 'Рабочие программы', route: 'demands'},
 ];
 
 type MenuProps = {}
@@ -65,8 +67,9 @@ type MenuProps = {}
 type MenuState = {}
 
 export default class Menu extends React.Component<MenuProps, MenuState> {
-
   render() {
+    const {activeRoute} = this.props;
+
     return <SMenu>
       <SButtonsWrapper>
         <SRefreshButton onClick={this.props.updatePortfolio}>
@@ -80,7 +83,8 @@ export default class Menu extends React.Component<MenuProps, MenuState> {
                 <MenuItem key={index}
                           setRoute={() => this.props.setRoute(
                               item.route)}
-                          itemName={item.name}
+                          active={activeRoute === item.route}
+                          text={item.name}
                 />)}
       </SMenuWrapper>
     </SMenu>;
@@ -91,7 +95,10 @@ type MenuItemProps = {};
 
 class MenuItem extends React.Component<MenuItemProps> {
   render() {
-    return <SMenuItem
-        onClick={this.props.setRoute}>{this.props.itemName}</SMenuItem>;
+    return (
+        <SMenuItem onClick={this.props.setRoute} active={this.props.active}>
+          {this.props.text}
+        </SMenuItem>
+    );
   }
 }

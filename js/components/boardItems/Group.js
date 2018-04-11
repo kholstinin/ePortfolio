@@ -10,8 +10,9 @@ const GroupItem = SBoardItem.extend`
 `;
 
 export default class Group extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       expanded: false,
     };
@@ -19,6 +20,11 @@ export default class Group extends React.Component {
 
   render() {
     const {group} = this.props;
+
+    if (group.err) {
+      return null;
+    }
+
     return (
         <div>
           <GroupItem error={!!group.err} onClick={this.onGroupClick}>

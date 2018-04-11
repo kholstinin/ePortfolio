@@ -11,11 +11,13 @@ import {storage_portfolioKey} from '../common/global';
 import Portfolio from '../common/classes/portfolio';
 import workHandler from '../common/worksHandler';
 
+import {containerHeight} from '../common/global';
+
 const Container = styled.div`
   width: 1200px;
-  margin: 0 auto;
-  padding-top: 15px;
-  height: 800px;
+  height: ${containerHeight}px;
+  background-color: #fff;
+  box-shadow: 0 8px 17px 2px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.2);
 `;
 
 const Row = styled.div`
@@ -30,12 +32,12 @@ const SPage = styled.div`
 `;
 
 export default class Wrapper extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       loading: true,
-      route: 'portfolio',
+      route: 'students',
       portfolio: null,
     };
 
@@ -55,6 +57,7 @@ export default class Wrapper extends React.Component {
               />
             </SPage>
             <Menu
+                activeRoute={route}
                 updatePortfolio={this.updatePortfolio}
                 setRoute={this.setRoute}
             />
@@ -79,6 +82,7 @@ export default class Wrapper extends React.Component {
         if (tree) {
           const portfolio = new Portfolio(tree);
           initialisePortfolio(portfolio).then(() => {
+            console.log(portfolio);
             this.setState({portfolio: portfolio});
           });
         } else {

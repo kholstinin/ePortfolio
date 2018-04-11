@@ -9,8 +9,8 @@ const DisciplineItem = SBoardItem.extend`
 `;
 
 export default class Student extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       expanded: false,
     };
@@ -18,6 +18,10 @@ export default class Student extends React.Component {
 
   render() {
     const {discipline} = this.props;
+
+    if (discipline.err) {
+      return null;
+    }
 
     return <div>
       <DisciplineItem isDone={discipline.isDone} onClick={this.onDisciplineClick}>

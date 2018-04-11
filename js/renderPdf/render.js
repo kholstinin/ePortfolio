@@ -23,8 +23,9 @@ import Button from '../components/button/Button';
 import {getInfoFromFileName} from '../common/nameSplit';
 
 class App extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       loading: true,
       pageNumber: 1,

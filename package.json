@@ -22,16 +22,16 @@
   "homepage": "https://github.com/kholstinin/ePortfolio#readme",
   "dependencies": {
     "cyrillic-to-translit-js": "^2.0.0",
-    "directory-tree": "^2.0.0",
-    "electron": "^1.8.3",
-    "electron-json-storage": "^4.0.2",
+    "directory-tree": "^2.1.0",
+    "electron": "^1.8.4",
+    "electron-json-storage": "^4.0.3",
     "pouchdb-browser": "^6.4.3",
     "pouchdb-find": "^6.4.3",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "react-modal": "^3.3.2",
     "react-pdf-js": "^3.0.7",
-    "styled-components": "^3.2.1"
+    "styled-components": "^3.2.5"
   },
   "devDependencies": {
     "babel": "^6.23.0",
@@ -44,10 +44,10 @@
     "babel-preset-stage-2": "^6.24.1",
     "electron-react-devtools": "^0.5.3",
     "electron-rebuild": "^1.7.3",
-    "flow-bin": "^0.67.1",
-    "jest": "^22.4.2",
-    "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.11",
-    "webpack-dev-server": "^3.1.1"
+    "flow-bin": "^0.69.0",
+    "jest": "^22.4.3",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14",
+    "webpack-dev-server": "^3.1.3"
   }
 }

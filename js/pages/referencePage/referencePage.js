@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import PageWrapper from '../../components/pageWrapper/PageWrapper';
+import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 
 export default class ReferencePage extends React.Component {
   render() {
     return <PageWrapper>
-      references for print
-    </PageWrapper>
+      <PageHeader text='Справки для печати'/>
+      <PageContent>
+        references for print
+      </PageContent>
+    </PageWrapper>;
   }
 }
