@@ -5,6 +5,8 @@ import {getStudentId} from '../getId';
 import worksHandler from '../worksHandler';
 
 import {portfDB} from '../databases';
+import type {TStudentFullName} from '../../typings/StudentFullName';
+import type {TStudyType} from '../../typings/Common';
 
 export default class Student {
   disciplines = [];
@@ -12,15 +14,21 @@ export default class Student {
   path = '';
   fullName = '';
   groupName = '';
-  disciplineTree = [];
-  allStudents = [];
+  studyType = '';
 
-  constructor(tree, groupName, allStudents) {
-    this.disciplineTree = tree.children;
+  _disciplineTree = [];
+  _allStudents = [];
+
+  constructor(
+      tree: dirTree, groupName: string, allStudents: Array<TStudentFullName>,
+      type: TStudyType) {
+    this._disciplineTree = tree.children;
+    this._allStudents = allStudents;
+
     this.path = tree.path;
     this.name = tree.name;
     this.groupName = groupName;
-    this.allStudents = allStudents;
+    this.studyType = type;
   }
 
   initialiseStudent() {
@@ -40,12 +48,12 @@ export default class Student {
           return doc;
         }
       }).then(portfolioStatus => {
-        this.disciplines = this.disciplineTree.map(
-            discipline => new Discipline(discipline, this.groupName, this.name,
-                portfolioStatus)
+        this.disciplines = this._disciplineTree.map(
+            discipline => new Discipline(discipline, this.groupName,
+                this.fullName,
+                portfolioStatus, this.studyType),
         );
       });
-
     } else {
       this.err = 'Нет такого студента';
       worksHandler.addWrongWork(this);
@@ -53,7 +61,7 @@ export default class Student {
   }
 
   _validateStudentName(): boolean {
-    const fullName = this.allStudents.find((studentFullName) => {
+    const fullName = this._allStudents.find((studentFullName) => {
       const nameWithInitials = getNameWithInitials(studentFullName);
       return nameWithInitials === this.name;
     });

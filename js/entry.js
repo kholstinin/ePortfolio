@@ -5,7 +5,7 @@ const storage = require('electron-json-storage');
 import {injectGlobal} from 'styled-components';
 //PouchDB.plugin(require('pouchdb-find'));
 
-import App from './components/App';
+import App from './App';
 
 injectGlobal`
   *, *:before, *:after {

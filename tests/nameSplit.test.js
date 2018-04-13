@@ -7,7 +7,7 @@ test('Функция получения информации из имени о�
     name: 'Холстинин ДА',
     discipline: 'ООП',
     workType: 'ПР',
-    workNumber: 2,
+    workNumber: '2',
   };
   const result = nameSplit(fileName);
 

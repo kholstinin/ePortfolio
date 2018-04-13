@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-type TSelectInputProps = {};
-
-type TSelectInputState = {}
+import type {TSelectInputProps} from './typings';
 
 const selectHeight = 30;
 
@@ -21,7 +19,7 @@ const SOption = styled.option`
 
 `;
 
-export default class SelectInput extends React.Component<TSelectInputProps, TSelectInputState> {
+export default class SelectInput extends React.Component<TSelectInputProps, {}> {
   render() {
     return (
         <SSelectInput width={this.props.width} value={this.props.value}

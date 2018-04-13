@@ -1,6 +1,10 @@
 {
-  "_id": "f39ca44b1917f282770274f5b10d6223",
-  "name": "Холстинин Дмитрий Алексеевич",
+  "_id": "pe-41b_holstinin_dmitry_aleekseevich",
+  "name": {
+    "name": "Дмитрий",
+    "surname": "Холстинин",
+    "patronymic": "Алексеевич"
+  },
   "group": "ПЕ-41б",
   "portfolio": [
     {

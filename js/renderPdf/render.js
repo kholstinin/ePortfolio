@@ -1,6 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PDF from 'react-pdf-js';
+
+const electron = require('electron');
+const {BrowserWindow} = electron.remote;
+
+import Button from '../components/button/Button';
+import {portfDB} from '../common/databases';
+
+import StudentPortfolioUtil from '../common/portfolioDisciplineUtil';
+import {getInfoFromFileName} from '../common/nameSplit';
+import {getStudentId} from '../common/getId';
+
 import {
   Container,
   PdfWrapper,
@@ -15,13 +26,6 @@ import {
   ButtonsWrapper,
 } from './styles';
 
-const electron = require('electron');
-const {BrowserWindow} = electron.remote;
-
-import Button from '../components/button/Button';
-
-import {getInfoFromFileName} from '../common/nameSplit';
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -31,15 +35,16 @@ class App extends React.Component {
       pageNumber: 1,
       totalPages: null,
       currentWorkNumber: 0,
+      errorMessage: '',
       pathsToPdf: [],
     };
 
     require('electron').ipcRenderer.on('mainChannel', (event, params) => {
-      console.log(params);
       this.setState({
         loading: false,
         widthOfPdf: params.widthOfPdf,
         pathsToPdf: params.paths,
+        studentsInfoArr: params.studentsInfoArr,
       });
     });
   }
@@ -72,13 +77,13 @@ class App extends React.Component {
       widthOfPdf,
       pathsToPdf,
       currentWorkNumber,
+      errorMessage,
     } = this.state;
 
     if (loading) {
       return null;
     }
 
-    console.log(pathsToPdf);
     const pathToPdf = pathsToPdf[currentWorkNumber];
     const splitPath = pathToPdf.split('\\');
     const fileName = splitPath[splitPath.length - 1];
@@ -117,7 +122,9 @@ class App extends React.Component {
               <BtnBlock onClick={this.handleNext}/>
               <div style={{'marginLeft': '5px'}}>{' из ' + totalPages}</div>
             </PageControl>
-            <MessageInput/>
+            <MessageInput value={errorMessage}
+                          onChange={(e) => this.setState(
+                              {errorMessage: e.target.value})}/>
             <ButtonsWrapper>
               <Button onClick={this.handleWorkPassClick} text='Принять работу'/>
               <Button onClick={this.handleWorkRejectClick}
@@ -130,26 +137,61 @@ class App extends React.Component {
 
   handleWorkPassClick = () => {
     //TODO add info in db
-    this.renderNext();
+    this.renderNext({status: true});
   };
 
   handleWorkRejectClick = () => {
     //TODO add info in db
-    this.renderNext();
+    this.renderNext({status: false, error: this.state.errorMessage});
   };
 
-  renderNext() {
+  renderNext(workStatus) {
+    this.setState({loading: true});
+
     const {currentWorkNumber, pathsToPdf} = this.state;
-    const currentWork = pathsToPdf[currentWorkNumber];
+    const currentWorkPath = pathsToPdf[currentWorkNumber];
     const currentWin = BrowserWindow.getFocusedWindow();
 
-    if (pathsToPdf.length === 1 || currentWorkNumber > pathsToPdf.length) {
-      currentWin.close();
-    }
+    const splitPath = currentWorkPath.split('\\');
+    const fileName = splitPath[splitPath.length - 1];
+    const studentInfo = getInfoFromFileName(fileName);
 
-    this.setState(prevState => {
-      return {...prevState, currentWorkNumber: ++prevState.currentWorkNumber};
-    })
+    this.putWorkInPortfolio(studentInfo, workStatus).then((res) => {
+      if (res.ok) {
+        if (pathsToPdf.length === 1 || currentWorkNumber > pathsToPdf.length) {
+          currentWin.close();
+        }
+
+        this.setState(prevState => {
+          return {
+            ...prevState,
+            currentWorkNumber: ++prevState.currentWorkNumber,
+            loading: false,
+            errorMessage: '',
+          };
+        });
+      }
+    }).catch(err => {
+      //todo
+    });
+
+  }
+
+  putWorkInPortfolio(fileInfo, workStatus): Promise<{ ok: boolean }> {
+    const {studentsInfoArr, currentWorkNumber} = this.state;
+    const studentInfo = studentsInfoArr[currentWorkNumber];
+    const {discipline, workType, workNumber} = fileInfo;
+
+    const id = getStudentId(studentInfo.groupName, studentInfo.fullName);
+
+    return portfDB.get(id).then((doc) => {
+      const studentPortfolio = new StudentPortfolioUtil(doc);
+      studentPortfolio.addWork(discipline, workType, workNumber,
+          workStatus);
+      portfDB.put(studentPortfolio.getPortfolio());
+    }).catch(err => {
+      console.log(err);
+    });
   }
 }
 

@@ -7,23 +7,27 @@ import worksHandler from '../../common/worksHandler';
 
 export default class WorkFile {
   name: '';
-  expectedFileName = '';
+  studentFullName: '';
+  groupName = '';
   path = '';
+  expectedFileName = '';
   extension = '';
   verified = false;
-
   err: string;
 
   constructor(
-      file: dirTree, groupName, studentName, disciplineName, workType,
+      file: dirTree, groupName, studentFullName, disciplineName, workType,
       workTypePortfolioStatus) {
     this.name = file.name;
+    this.groupName = groupName;
     this.extension = file.extension;
     this.path = file.path;
+    this.studentFullName = studentFullName;
     const number = getInfoFromFileName(file.name).workNumber;
 
-    if (workTypePortfolioStatus) {
-      this.verified = !!workTypePortfolioStatus[number];
+    
+    if (workTypePortfolioStatus && workTypePortfolioStatus[number]) {
+      this.verified = workTypePortfolioStatus[number].status;
     }
 
     if (!this.verified) {
@@ -31,15 +35,15 @@ export default class WorkFile {
     }
 
     const workTypeAbbr = getWorkTypeAbbr(workType);
-    this.expectedFileName = getFileNameFromInfo(groupName, studentName,
+    this.expectedFileName = getFileNameFromInfo(groupName, studentFullName,
         disciplineName, workTypeAbbr, number);
 
-    if (!this.validateWorkFile()) {
+    if (!this._validateWorkFile()) {
       this.err = 'Работа названа неправильно';
     }
   }
 
-  validateWorkFile(): boolean {
+  _validateWorkFile(): boolean {
     return this.name === this.expectedFileName;
   }
 }

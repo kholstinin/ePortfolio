@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import {connect} from 'react-redux';
+import {CHANGE_ROUTE} from '../../reducers/actionTypes';
 
 import {pageColor} from '../../common/palette';
 
@@ -21,7 +23,7 @@ const SMenuItem = styled.li`
   width: 100%;
   height: ${itemHeight}px;
   line-height: ${itemHeight}px;
-  background-color: ${props => props.active ? activeColor  : 'transparent'}
+  background-color: ${props => props.active ? activeColor : 'transparent'}
   text-align: center;
   
   &:hover {
@@ -66,28 +68,30 @@ type MenuProps = {}
 
 type MenuState = {}
 
-export default class Menu extends React.Component<MenuProps, MenuState> {
+class Menu extends React.Component<MenuProps, MenuState> {
   render() {
-    const {activeRoute} = this.props;
+    const {route} = this.props;
 
-    return <SMenu>
-      <SButtonsWrapper>
-        <SRefreshButton onClick={this.props.updatePortfolio}>
-          Обн
-        </SRefreshButton>
-        <SRefreshButton>Син</SRefreshButton>
-      </SButtonsWrapper>
-      <SMenuWrapper>
-        {menuItems.map(
-            (item, index) =>
-                <MenuItem key={index}
-                          setRoute={() => this.props.setRoute(
-                              item.route)}
-                          active={activeRoute === item.route}
-                          text={item.name}
-                />)}
-      </SMenuWrapper>
-    </SMenu>;
+    return (
+        <SMenu>
+          <SButtonsWrapper>
+            <SRefreshButton onClick={this.props.updatePortfolio}>
+              Обн
+            </SRefreshButton>
+            <SRefreshButton>Син</SRefreshButton>
+          </SButtonsWrapper>
+          <SMenuWrapper>
+            {menuItems.map(
+                (item, index) =>
+                    <MenuItem key={index}
+                              setRoute={() => this.props.changeRoute(
+                                  item.route)}
+                              active={route === item.route}
+                              text={item.name}
+                    />)}
+          </SMenuWrapper>
+        </SMenu>
+    );
   }
 }
 
@@ -102,3 +106,14 @@ class MenuItem extends React.Component<MenuItemProps> {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  route: state.router.activeRoute,
+});
+
+const mapDispatchToProps = dispatch => ({
+  changeRoute: route => dispatch(
+      {type: CHANGE_ROUTE, payload: route}),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

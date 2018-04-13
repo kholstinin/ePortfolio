@@ -1,17 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
-import Menu from './menu/Menu';
-import initialisePortfolio from '.././common/initialisePortfolio';
+
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
+import AppReducer from './reducers';
+
+import initialisePortfolio from './common/initialisePortfolio';
 
 const dirTree = require('directory-tree');
 const storage = require('electron-json-storage');
 
-import RouterPage from '../pages/RouterPage';
-import {storage_portfolioKey} from '../common/global';
-import Portfolio from '../common/classes/portfolio';
-import workHandler from '../common/worksHandler';
+import RouterPage from './pages/RouterPage';
+import {storage_portfolioKey} from './common/global';
+import Portfolio from './common/classes/portfolio';
+import workHandler from './common/worksHandler';
+import Menu from './components/menu/Menu';
 
-import {containerHeight} from '../common/global';
+import {containerHeight} from './common/global';
 
 const Container = styled.div`
   width: 1200px;
@@ -32,12 +37,13 @@ const SPage = styled.div`
 `;
 
 export default class Wrapper extends React.Component {
+  store = createStore(AppReducer);
+
   constructor(props) {
     super(props);
 
     this.state = {
       loading: true,
-      route: 'students',
       portfolio: null,
     };
 
@@ -45,24 +51,19 @@ export default class Wrapper extends React.Component {
   }
 
   render() {
-    const {route, portfolio} = this.state;
+    const {portfolio} = this.state;
 
     return (
-        <Container>
-          <Row>
-            <SPage>
-              <RouterPage
-                  route={route}
-                  portfolio={portfolio}
-              />
-            </SPage>
-            <Menu
-                activeRoute={route}
-                updatePortfolio={this.updatePortfolio}
-                setRoute={this.setRoute}
-            />
-          </Row>
-        </Container>
+        <Provider store={this.store}>
+          <Container>
+            <Row>
+              <SPage>
+                <RouterPage portfolio={portfolio}/>
+              </SPage>
+              <Menu updatePortfolio={this.updatePortfolio}/>
+            </Row>
+          </Container>
+        </Provider>
     );
   }
 
@@ -91,5 +92,5 @@ export default class Wrapper extends React.Component {
       }
       this.setState({loading: false});
     });
-  }
+  };
 }

@@ -19,8 +19,8 @@ const remoteStudDB = new PouchDB(studDBurl, {
 const discDBurl = 'https://79df10c6-9673-4d5f-afc4-d981ed85f629-bluemix.cloudant.com/disciplines';
 const remoteDiscDB = new PouchDB(studDBurl, {
   auth: {
-    username: 'cheduchenestionsipestage',
-    password: '54e9e4f46525f7b411e6143cade1d11cf475547a',
+    username: 'tonightiornedwephyborked',
+    password: '755801eccc9c663e1d7981043d2acd77fadabd40',
   },
 });
 

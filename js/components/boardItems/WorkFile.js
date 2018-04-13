@@ -26,7 +26,14 @@ export default class WorkType extends React.Component {
     }
 
     return <div>
-      <WorkFile verified={workFile.verified} onClick={() => openWorks([this.props.workFile.path])}>
+      <WorkFile
+          verified={workFile.verified}
+          onClick={() => openWorks([workFile.path], [
+            {
+              groupName: workFile.groupName,
+              fullName: workFile.studentFullName,
+            },
+          ])}>
         {workFile.name}
       </WorkFile>
     </div>;

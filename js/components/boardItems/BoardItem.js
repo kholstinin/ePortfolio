@@ -5,11 +5,11 @@ function getTextColor(props) {
     return '#c62828 ';
   }
 
-  if (!props.isDone) {
+  if (props.verified === false || props.isDone === false) {
     return '#ffd600  ';
   }
 
-  return '#000';
+  return '#43a047';
 }
 
 const SBoardItem = styled.span`

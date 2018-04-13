@@ -1,43 +1,22 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import Button from '../../button/Button';
 import SInput from '../../../components/input/Input';
+import {
+  SModalHeader,
+  SColumn,
+  SRow,
+  SLabel,
+  SSelectInputWrapper,
+} from './styles';
 
 import {getWorkObj, getStudyTypes} from '../../../common/utils';
 import SelectInput from '../../selectInput/SelectInput';
 
-const modalHeaderHeight = 40;
-const SModalHeader = styled.div`
-  width: 100%;
-  height: ${modalHeaderHeight}px;
-  line-height: ${modalHeaderHeight}px;
-  font-size: 15px;
-  text-align: center;
-  margin: 10px 0;
-`;
+import type {TDisciplineInfo} from '../../../typings/Discipline';
+import type {TDisciplineModalProps, TDisciplineModalState} from './typings';
 
-const SColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const SRow = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: row;
-`;
-
-const SLabel = styled.div`
-  width: 200px;
-  margin-right: 5px;
-`;
-
-const SSelectInputWrapper = styled.div`
-  width: 100px;
-`;
-
-export default class AddGroupModal extends React.Component {
+export default class DisciplineModal extends React.Component<TDisciplineModalProps, TDisciplineModalState> {
   constructor(props) {
     super(props);
 
@@ -119,7 +98,7 @@ export default class AddGroupModal extends React.Component {
         </div>);
   }
 
-  serializeDiscipline() {
+  serializeDiscipline(): TDisciplineInfo {
     const {
       fullName,
       shortName,
@@ -144,7 +123,7 @@ export default class AddGroupModal extends React.Component {
         const workNumbers = disciplines[key];
         if (workNumbers !== '') {
           const workType = key;
-          const workNumbers = AddGroupModal.getWorksArr(disciplines[key]);
+          const workNumbers = DisciplineModal.getWorksArr(disciplines[key]);
 
           disciplineInfo.works.push(getWorkObj(workType, workNumbers));
         }
@@ -158,7 +137,7 @@ export default class AddGroupModal extends React.Component {
     return disciplineInfo;
   }
 
-  static getWorksArr(workNumbers) {
+  static getWorksArr(workNumbers: string): Array<string> {
     //todo add validations
     const works = workNumbers.trim().split(' ');
 
@@ -175,7 +154,7 @@ export default class AddGroupModal extends React.Component {
     }
   }
 
-  onAddClick = () => {
+  onAddClick = (): void => {
     this.props.onAddClick(this.serializeDiscipline());
     this.props.closeModal();
   };

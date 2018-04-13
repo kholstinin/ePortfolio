@@ -1,12 +1,13 @@
 import studyTypes from '../../data/studyType';
+import type {TStudentFullName} from '../typings/StudentFullName';
+import type {
+  TDisciplineType,
+  TWorkObj,
+  TSelectOption,
+  TStudyType,
+} from '../typings/Common';
 
-type TStudent = {
-  name: string,
-  surname: string,
-  patronymic: string,
-}
-
-function getSeparator(str) {
+function getSeparator(str: string): string {
   const space = ' ';
   const tableSpace = '\r';
 
@@ -18,7 +19,7 @@ function getSeparator(str) {
   return space;
 }
 
-export function splitStudent(studentFullName: string): TStudent {
+export function splitStudent(studentFullName: string): TStudentFullName {
   const separator = getSeparator(studentFullName);
   const splitName = studentFullName.split(separator);
 
@@ -29,7 +30,7 @@ export function splitStudent(studentFullName: string): TStudent {
   };
 }
 
-export function getStudentName(student: TStudent) {
+export function getStudentName(student: TStudentFullName): string {
   return `${student.surname} ${student.name} ${student.patronymic}`;
 }
 
@@ -37,7 +38,7 @@ export function getDocs(arrOfDocs) {
   return arrOfDocs.map(item => item.doc);
 }
 
-function getDisciplineType(discipline) {
+function getDisciplineType(discipline: string): TDisciplineType {
   const disciplinesTuple = {
     'course': 'Курсовая работа',
     'practical': 'Практические работы',
@@ -48,14 +49,14 @@ function getDisciplineType(discipline) {
   return disciplinesTuple[discipline];
 }
 
-export function getWorkObj(work: string, workNumbers: Array<string>) {
+export function getWorkObj(work: string, workNumbers: Array<string>): TWorkObj {
   return {
     'type': getDisciplineType(work),
     workNumbers,
   };
 }
 
-export function getStudyTypes(): Array<{}> {
+export function getStudyTypes(): Array<TSelectOption> {
   const arrOfStudyTypes = [];
 
   for (const type in studyTypes) {
@@ -68,4 +69,20 @@ export function getStudyTypes(): Array<{}> {
   }
 
   return arrOfStudyTypes;
+}
+
+export function compareStudents(
+    student1: TStudentFullName, student2: TStudentFullName): boolean {
+  return student1.name === student2.name &&
+      student1.surname === student2.surname &&
+      student1.patronymic === student2.patronymic;
+}
+
+export function printStudyType(studyType: TStudyType): string {
+  const studyTypes = {
+    fullTime: "Очное",
+    partTime: "Заочное"
+  };
+
+  return studyTypes[studyType];
 }

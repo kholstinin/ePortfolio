@@ -1,15 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import AddGroupModal from '../../components/modals/groupModal/AddGroupModal';
+import StudentsModal from '../../components/modals/studentsModal/StudentsModal';
 import Modal from '../../components/modal/Modal';
 import GroupList from './groupList/GroupList';
 import GroupInfo from './groupInfo/GroupInfo';
 
 import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 
-import {splitStudent, getDocs} from '../../common/utils';
+import {splitStudent, getDocs, compareStudents} from '../../common/utils';
 import {studDB} from '../../common/databases';
 import {getGroupId} from '../../common/getId';
+import type {TGroupInfo} from '../../typings/Group';
 
 const modalStyles = {
   content: {
@@ -54,7 +55,7 @@ export default class StudentsPage extends React.Component {
               onRequestClose={this.closeGroupModal}
               styles={modalStyles}
           >
-            <AddGroupModal
+            <StudentsModal
                 closeModal={this.closeGroupModal}
                 addGroup={this.addGroup}
             />
@@ -72,15 +73,18 @@ export default class StudentsPage extends React.Component {
                   selectedGroupName={selectedGroupName}
                   group={this.getSelectedGroup()}
                   addStudent={this.addStudent}
-                  removeStudent={this.removeStudent}
                   editStudent={this.editStudent}
+                  removeStudent={this.removeStudent}
                   removeGroup={this.removeGroup}
+                  changeField={this.changeField}
               />
             </SPageContent>
           </PageContent>
         </PageWrapper>
     );
   }
+
+
 
   onListItemClick = (groupName: string): void => {
     this.setState({
@@ -112,19 +116,7 @@ export default class StudentsPage extends React.Component {
     });
   };
 
-  removeGroup = (groupName) => {
-    const id = getGroupId(groupName);
-
-    studDB.get(id).then((doc) => {
-      return studDB.remove(doc);
-    }).then(res => {
-      if (res.ok) {
-        this.fetchGroups();
-      }
-    });
-  };
-
-  addGroup = (group) => {
+  addGroup = (group: TGroupInfo) => {
     const id = getGroupId(group.groupName);
     const doc = {
       _id: id,
@@ -132,7 +124,7 @@ export default class StudentsPage extends React.Component {
       students: group.students,
       profile: group.profile,
       direction: group.direction,
-      type: group.type,
+      studyType: group.studyType,
     };
 
     studDB.put(doc).then(res => {
@@ -142,6 +134,18 @@ export default class StudentsPage extends React.Component {
       }
     }).catch(err => {
       //TODO
+    });
+  };
+
+  removeGroup = () => {
+    const id = getGroupId(this.state.selectedGroupName);
+
+    studDB.get(id).then((doc) => {
+      return studDB.remove(doc);
+    }).then(res => {
+      if (res.ok) {
+        this.fetchGroups();
+      }
     });
   };
 
@@ -169,19 +173,31 @@ export default class StudentsPage extends React.Component {
     studDB.get(id).then((doc) => {
       let newStudents = doc.students.map(item => item);
       const indexOfStudent = doc.students.findIndex(student => {
-        //TODO add func to compare
-        return student.name === studentName.name &&
-            student.surname === studentName.surname &&
-            student.patronymic === studentName.patronymic;
+        return compareStudents(student, studentName);
       });
 
       newStudents.splice(indexOfStudent, 1);
-      console.log(newStudents);
       const newDoc = {...doc, students: newStudents};
-      console.log(newDoc);
 
       studDB.put(newDoc).then(res => {
-        console.log(res);
+        if (res.ok) {
+          this.fetchGroups();
+        }
+      }).catch(err => {
+        //TODO
+      });
+    });
+  };
+
+  changeField = (fieldName: string, newFieldValue) => {
+    const id = getGroupId(this.state.selectedGroupName);
+
+    studDB.get(id).then((doc) => {
+      const newDoc = {
+        ...doc,
+        [fieldName]: newFieldValue,
+      };
+      studDB.put(newDoc).then(res => {
         if (res.ok) {
           this.fetchGroups();
         }

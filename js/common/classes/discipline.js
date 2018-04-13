@@ -1,44 +1,55 @@
-import disciplines from '../../../data/disciplines';
 import Work from './work';
+import {discDB} from '../../common/databases';
+import {getDisciplineId} from '../getId';
+import worksHandler from '../worksHandler';
+
+import {TStudentPortfolio} from '../../typings/Portfolio';
+import {TStudyType} from '../../typings/Common';
 
 export default class Discipline {
+  _tree = {};
+  _portfolioStatus = {};
+
   name = '';
+  fullName = '';
   works = [];
-  disciplineInfo = {};
   isDone = false;
 
   constructor(
-      tree: dirTree, groupName: string, studentName: string, portfolioStatus) {
+      tree: dirTree, groupName: string, studentFullName: string,
+      portfolioStatus: TStudentPortfolio, studyType: TStudyType) {
+    this._tree = tree.children;
+    this._portfolioStatus = portfolioStatus;
+
     this.name = tree.name;
-    const worksArrTree = tree.children;
-
-    if (this._validateDisciplineName(disciplines.arr)) {
-      const needWorks = this.disciplineInfo.works;
-      const portfolioStatusExist = portfolioStatus.portfolio &&
-          portfolioStatus.portfolio.length;
-      let disciplinePortfolioStatus = null;
-
-      if (portfolioStatusExist) {
-        disciplinePortfolioStatus = portfolioStatus.portfolio.find(
-            item => item.disciplineName === this.name);
-        if (disciplinePortfolioStatus) {
-          this.isDone = disciplinePortfolioStatus.isDone;
-        }
-      }
-
-      this.works = worksArrTree.map(
-          work => new Work(work, groupName, studentName, this.name, needWorks,
-              disciplinePortfolioStatus));
-    } else {
-      this.err = 'Такой дисциплины не существует';
-    }
+    this.studentFullName = studentFullName;
+    this.groupName = groupName;
+    this.studyType = studyType;
   }
 
-  _validateDisciplineName(disciplines): boolean {
-    const disciplineInfo = disciplines.find(
-        discipline => discipline.disciplineName === this.name);
-    this.disciplineInfo = disciplineInfo;
+  initialiseDiscipline() {
+    const id = getDisciplineId(this.name, this.studyType);
+    discDB.get(id).then(discipline => {
+      const needWorks = discipline.works;
+      this.fullName = discipline.fullName;
 
-    return !!disciplineInfo;
+      const disciplinePortfolioStatus = this._portfolioStatus.portfolio.find(
+          item => item.disciplineName === this.name);
+
+      if (disciplinePortfolioStatus) {
+        this.isDone = disciplinePortfolioStatus.isDone;
+      }
+
+      this.works = this._tree.map(
+          work => new Work(work, this.groupName, this.studentFullName,
+              this.name,
+              needWorks,
+              disciplinePortfolioStatus));
+    }).catch(err => {
+      if (err.name === 'not_found') {
+        this.err = 'Такой дисциплины не существует';
+        worksHandler.addWrongWork(this);
+      }
+    });
   }
 }

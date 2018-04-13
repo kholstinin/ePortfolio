@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import Button from '../../button/Button';
 
 import SelectInput from '../../selectInput/SelectInput';
@@ -8,38 +7,18 @@ import {
   splitStudent,
 } from '../../../common/utils';
 
-const modalHeaderHeight = 40;
-const SModalHeader = styled.div`
-  width: 100%;
-  height: ${modalHeaderHeight}px;
-  line-height: ${modalHeaderHeight}px;
-  font-size: 15px;
-  text-align: center;
-  margin: 10px 0;
-`;
+import {
+  SModalHeader,
+  SInputArea,
+  SColumn,
+  SRow,
+  SLabel,
+} from './styles';
 
-const SInputArea = styled.textarea`
-  width: 100%;
-  height: 300px;
-`;
+import {TGroupModalProps, TGroupModalState} from './typings';
+import type {TStudentFullName} from '../../../typings/StudentFullName';
 
-const SColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const SRow = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: row;
-`;
-
-const SLabel = styled.div`
-  width: 150px;
-  margin-right: 5px;
-`;
-
-export default class AddGroupModal extends React.Component {
+export default class StudentsModal extends React.Component<TGroupModalProps, TGroupModalState> {
   constructor(props) {
     super(props);
 
@@ -48,7 +27,7 @@ export default class AddGroupModal extends React.Component {
       students: '',
       profile: '',
       direction: '',
-      type: '',
+      studyType: 'fullTime',
     };
   }
 
@@ -82,8 +61,8 @@ export default class AddGroupModal extends React.Component {
               <SelectInput
                   width={100}
                   options={getStudyTypes()}
-                  value={this.state.type}
-                  onItemPress={(type) => this.setState({type})}/>
+                  value={this.state.studyType}
+                  onItemPress={(studyType) => this.setState({studyType})}/>
             </SRow>
           </SColumn>
           <SModalHeader>
@@ -96,7 +75,7 @@ export default class AddGroupModal extends React.Component {
         </div>);
   }
 
-  serializeStudents = () => {
+  serializeStudents = (): Array<TStudentFullName> => {
     const {students} = this.state;
     const arrOfFullNames = students.split('\n');
     let arrOfStudents = [];

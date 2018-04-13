@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {getStudentName} from '../../../common/utils';
+import {getStudentName, printStudyType} from '../../../common/utils';
 
 const SColumnHeader = styled.div`
   margin-bottom: 10px;
@@ -49,7 +49,7 @@ export default class GroupInfo extends React.Component {
               <SColumnHeader>Информация о группе:</SColumnHeader>
               <SRow>Профиль {group.profile}</SRow>
               <SRow>Направление {group.direction}</SRow>
-              <SRow>Отделение {group.type}</SRow>
+              <SRow>Отделение {printStudyType(group.studyType)} <span onClick={() => this.props.changeField('type', 'Очное')}>Изменить</span></SRow>
             </SColumn>
             <SStudentsListWrapper>
               <SStudentsList>

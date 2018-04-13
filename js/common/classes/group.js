@@ -5,13 +5,14 @@ import {studDB} from '../databases';
 import worksHandler from '../worksHandler';
 
 export default class Group {
+  _studentsTree = [];
+
   students = [];
-  studentsTree = [];
   name = '';
   path = '';
 
-  constructor(tree) {
-    this.studentsTree = tree.children;
+  constructor(tree: dirTree) {
+    this._studentsTree = tree.children;
     this.name = tree.name;
     this.path = tree.path;
   }
@@ -21,15 +22,15 @@ export default class Group {
 
     return studDB.get(id).then(doc => {
       if (doc) {
-        this.students = this.studentsTree.map(
-            student => new Student(student, this.name, doc.students));
+        this.students = this._studentsTree.map(
+            student => new Student(student, this.name, doc.students, doc.studyType));
       } else {
         worksHandler.addWrongWork(this);
         this.err = 'Нет такой группы';
       }
     }).catch(err => {
-      worksHandler.addWrongWork(this);
       this.err = 'Нет такой группы';
+      worksHandler.addWrongWork(this);
     });
   }
 }

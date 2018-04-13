@@ -17,5 +17,17 @@ export default function initialisePortfolio(portfolio) {
     });
 
     return Promise.all(studentPromises);
+  }).then(() => {
+    const disciplinePromises = [];
+
+    groups.forEach(group => {
+      const students = group.students;
+      students.forEach(student => {
+        const disciplines = student.disciplines;
+        disciplines.forEach(discipline => disciplinePromises.push(discipline.initialiseDiscipline()));
+      });
+    });
+
+    return Promise.all(disciplinePromises);
   });
 }

@@ -61,13 +61,15 @@ export default class ReviewPage extends React.Component {
 
   render() {
     const {works} = this.state;
+    const workInfo = this.getInfoFromWorks();
+    const workPaths = this.getPathsFromWorks();
 
     return (
         <PageWrapper>
           <PageHeader text='Работы на проверку'/>
           <PageContent>
             <SControls>
-              <a onClick={() => openWorks(this.getPathsFromWorks(works))}>
+              <a onClick={() => openWorks(workPaths, workInfo)}>
                 Начать проверять все работы
               </a>
             </SControls>
@@ -83,8 +85,21 @@ export default class ReviewPage extends React.Component {
         </PageWrapper>);
   }
 
-  getPathsFromWorks(works) {
+  getPathsFromWorks() {
+    const {works} = this.state;
+
     return works.map(work => work.path);
+  }
+
+  getInfoFromWorks() {
+    const {works} = this.state;
+
+    return works.map(work => {
+      return {
+        fullName: work.studentFullName,
+        groupName: work.groupName,
+      };
+    });
   }
 
   renderTableHeader() {
@@ -95,6 +110,7 @@ export default class ReviewPage extends React.Component {
       'Тип работы',
       'Номер',
       'Статус'];
+
     return (
         <SWorkTableHeader>
           <SWorkTableRow>

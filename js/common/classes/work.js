@@ -1,6 +1,8 @@
 import workTypes from '../../../data/workTypes';
 import WorkFile from './workFile';
 
+import type {TStudentFullName} from '../../typings/StudentFullName';
+
 export default class Work {
   type = '';
   numberOfWorks = 0;
@@ -8,13 +10,13 @@ export default class Work {
   needWorks = {};
 
   constructor(
-      tree: dirTree, groupName: string, studentName: string,
+      tree: dirTree, groupName: string, studentFullName: TStudentFullName,
       disciplineName: string, needWorks, disciplinePortfolioStatus) {
     this.type = tree.name;
     this.numberOfWorks = tree.children.length;
-    this.needWorksNumber = needWorks[this.type];
+    this.needWorks = needWorks.find(work => work.type === this.type);
 
-    if (this.validateWorkType()) {
+    if (this._validateWorkType()) {
       let workTypePortfolioStatus = null;
       if (disciplinePortfolioStatus) {
         workTypePortfolioStatus = disciplinePortfolioStatus.works.find(
@@ -22,7 +24,7 @@ export default class Work {
       }
 
       this.workFiles = tree.children.map(
-          file => new WorkFile(file, groupName, studentName, disciplineName,
+          file => new WorkFile(file, groupName, studentFullName, disciplineName,
               this.type, workTypePortfolioStatus));
 
       // if (!this.validateNumberOfWork()) {
@@ -33,11 +35,7 @@ export default class Work {
     }
   }
 
-  initialiseWorkFiles() {
-
-  }
-
-  validateWorkType(): boolean {
+  _validateWorkType(): boolean {
     return workTypes.findIndex(type => type === this.type) !== -1;
   }
 

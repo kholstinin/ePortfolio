@@ -1,17 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
-import AddDisciplineModal
-  from '../../components/modals/disciplineModal/AddDisciplineModal';
+import DisciplineModal
+  from '../../components/modals/disciplineModal/DisciplineModal';
 import Modal from '../../components/modal/Modal';
 
 import DisciplineList from './disciplineList/DisciplineList';
 import DisciplineInfo from './disciplineInfo/DisciplineInfo';
 
-import {discDB, studDB} from '../../common/databases';
+import {discDB} from '../../common/databases';
 
 import {getDisciplineId} from '../../common/getId';
 import {getDocs} from '../../common/utils';
+
+
+import type {TDisciplineInfo} from '../../typings/Discipline';
 
 const SPageContent = styled.div`
   display: flex;
@@ -34,7 +37,7 @@ export default class WorkDemandsPage extends React.Component {
     this.state = {
       disciplineModalVisible: false,
       allDisciplines: [],
-      selectedDiscipline: ',',
+      selectedDisciplineName: '',
     };
   }
 
@@ -53,7 +56,7 @@ export default class WorkDemandsPage extends React.Component {
               onRequestClose={this.closeDisciplineModal}
               styles={modalStyles}
           >
-            <AddDisciplineModal
+            <DisciplineModal
                 closeModal={this.closeDisciplineModal}
                 onAddClick={this.addDiscipline}
             />
@@ -68,6 +71,8 @@ export default class WorkDemandsPage extends React.Component {
               />
               <DisciplineInfo
                   disciplineInfo={this.getSelectedDiscipline()}
+                  removeDiscipline={this.removeDiscipline}
+                  editDiscipline={this.editDiscipline}
               />
             </SPageContent>
           </PageContent>
@@ -76,15 +81,27 @@ export default class WorkDemandsPage extends React.Component {
   }
 
   setSelectedDiscipline = (disciplineName: string) => {
-    this.setState({selectedDiscipline: disciplineName});
+    this.setState({selectedDisciplineName: disciplineName});
   };
 
   getSelectedDiscipline = () => {
     return this.state.allDisciplines.find(
-        discipline => discipline.shortName === this.state.selectedDiscipline);
+        discipline => discipline.shortName === this.state.selectedDisciplineName);
   };
 
-  addDiscipline = (disciplineInfo) => {
+  fetchDisciplines() {
+    discDB.allDocs({include_docs: true}).then(result => {
+      const allDisciplines = getDocs(result.rows);
+      console.log(allDisciplines);
+
+      this.setState({
+        allDisciplines,
+        loading: false,
+      });
+    });
+  }
+
+  addDiscipline = (disciplineInfo: TDisciplineInfo) => {
     const id = getDisciplineId(disciplineInfo.shortName, disciplineInfo.type);
     const doc = {
       _id: id,
@@ -100,17 +117,21 @@ export default class WorkDemandsPage extends React.Component {
     });
   };
 
-  fetchDisciplines() {
-    discDB.allDocs({include_docs: true}).then(result => {
-      const allDisciplines = getDocs(result.rows);
-      console.log(allDisciplines);
+  removeDiscipline = (type: string) => {
+    const id = getDisciplineId(this.state.selectedDisciplineName, type);
 
-      this.setState({
-        allDisciplines,
-        loading: false,
-      });
+    discDB.get(id).then((doc) => {
+      return discDB.remove(doc);
+    }).then(res => {
+      if (res.ok) {
+        this.fetchDisciplines();
+      }
     });
-  }
+  };
+
+  editDiscipline = (oldDiscipline, newDiscipline) => {
+
+  };
 
   openDisciplineModal = () => {
     this.setState({disciplineModalVisible: true});

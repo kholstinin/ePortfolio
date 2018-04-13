@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {connect} from 'react-redux';
 
 import PortfolioPage from '../pages/portfolioPage/PortfolioPage';
 import ChooseRootPage from '../pages/chooseRootPage/chooseRootPage';
@@ -15,7 +16,7 @@ const Column = styled.div`
   height: 100%;
 `;
 
-export default class RouterPage extends React.Component {
+class RouterPage extends React.Component {
   render() {
     const {route, portfolio} = this.props;
 
@@ -33,3 +34,9 @@ export default class RouterPage extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  route: state.router.activeRoute,
+});
+
+export default connect(mapStateToProps)(RouterPage);
