@@ -1,10 +1,9 @@
-import initialState from './initialState';
 import {CHANGE_ROUTE} from './actionTypes';
 
-export default function router(state = initialState, action) {
+export default function router(state = {activeRoute: 'portfolio'}, action) {
   switch (action.type) {
     case CHANGE_ROUTE:
-      return {...state, activeRoute: action.payload};
+      return {...state, activeRoute: action.route};
     default:
       return state;
   }

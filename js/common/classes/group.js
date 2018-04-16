@@ -2,7 +2,8 @@ import Student from './student';
 import {getGroupId} from '../getId';
 import {studDB} from '../databases';
 
-import worksHandler from '../worksHandler';
+import store from '../../reducers/store';
+import {addWrongWork} from '../../reducers/actions';
 
 export default class Group {
   _studentsTree = [];
@@ -25,12 +26,12 @@ export default class Group {
         this.students = this._studentsTree.map(
             student => new Student(student, this.name, doc.students, doc.studyType));
       } else {
-        worksHandler.addWrongWork(this);
+        store.dispatch(addWrongWork(this));
         this.err = 'Нет такой группы';
       }
     }).catch(err => {
       this.err = 'Нет такой группы';
-      worksHandler.addWrongWork(this);
+      store.dispatch(addWrongWork(this));
     });
   }
 }

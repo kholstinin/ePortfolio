@@ -18,11 +18,11 @@ const Column = styled.div`
 
 class RouterPage extends React.Component {
   render() {
-    const {route, portfolio} = this.props;
+    const {route} = this.props;
 
     return (
         <Column>
-          {route === 'portfolio' && <PortfolioPage portfolio={portfolio} />}
+          {route === 'portfolio' && <PortfolioPage/>}
           {route === 'root' && <ChooseRootPage/>}
           {route === 'error' && <ErrorsPage/>}
           {route === 'review' && <ReviewsPage/>}

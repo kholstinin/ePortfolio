@@ -22,8 +22,10 @@ export default class GroupList extends React.Component {
           </SGroupListInputWrapper>
           <SGroupList>
             {this.props.studentsByGroup.map((group, index) =>
-                <SGroupListItem onClick={() =>
-                    this.props.onListItemClick(group.name)} key={index}>
+                <SGroupListItem
+                    selected={this.props.selectedGroupName === group.name}
+                    onClick={() =>
+                        this.props.onListItemClick(group.name)} key={index}>
                   {group.name}
                 </SGroupListItem>)}
           </SGroupList>

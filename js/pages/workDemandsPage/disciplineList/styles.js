@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import LeftMenu from '../../../components/tablePage/LeftMenu';
 
+const hoverColor = '#eceff1';
+
 export const SDisciplineListWrapper = LeftMenu.extend`
 
 `;
@@ -13,6 +15,7 @@ export const SDisciplineList = styled.ul`
 
 export const SDisciplineListItem = styled.li`
   width: 100%;
+  background-color: ${props => props.selected ? hoverColor : 'transparent'};
   text-align: center;
   cursor: pointer;
   height: 30px;
@@ -20,7 +23,7 @@ export const SDisciplineListItem = styled.li`
   font-size: 18px;
   
   &:hover {
-    background-color: #eceff1;
+    background-color: ${hoverColor};
   }
 `;
 

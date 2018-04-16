@@ -1,4 +1,4 @@
-import type {TStudentPortfolio} from '../typings/Portfolio';
+import type {TStudentPortfolio, TDisciplinePortfolio, TWorkStatus} from '../typings/Portfolio';
 
 export default class StudentPortfolioUtil {
   constructor(studentPortfolio: TStudentPortfolio) {
@@ -13,8 +13,6 @@ export default class StudentPortfolioUtil {
   ): void {
     const {disciplinePortfolioIndex, disciplinePortfolio, arrDisciplinePortfolio} = this._getDisciplinePortfolio(
         disciplineName);
-
-    console.log('break');
 
     if (disciplinePortfolioIndex !== -1) {
       const works = disciplinePortfolio.works;
@@ -46,8 +44,14 @@ export default class StudentPortfolioUtil {
     }
   }
 
-  getPortfolio() {
+  getPortfolio(): TStudentPortfolio {
     return this.studentPortfolio;
+  }
+
+  setDisciplineDone(disciplineName: string): void {
+    const {disciplinePortfolio} = this._getDisciplinePortfolio(disciplineName);
+
+    disciplinePortfolio.isDone = true;
   }
 
   _getDisciplinePortfolio(disciplineName: string): Array<TDisciplinePortfolio> {

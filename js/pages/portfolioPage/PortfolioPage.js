@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
 
 import Group from '../../components/boardItems/Group';
@@ -13,26 +14,34 @@ const ContentWrapper = styled.div`
   padding-top: 80px;
 `;
 
-export default class PortfolioPage extends React.Component {
+class PortfolioPage extends React.Component {
   render() {
     const {portfolio} = this.props;
 
-    return <PageWrapper>
-      <PageHeader text='Список потфолио'/>
-      <PageContent>
-        <ContentWrapper>
-          {portfolio === 'empty' ?
-              'Не указан путь до портфолио' :
-              null}
-          {portfolio && portfolio !== 'empty' ?
-              portfolio.groups.map(
-                  (group, index) => <Group
-                      key={index}
-                      group={group}
-                  />) :
-              null}
-        </ContentWrapper>
-      </PageContent>
-    </PageWrapper>;
+    return (
+        <PageWrapper>
+          <PageHeader text='Портфолио'/>
+          <PageContent>
+            <ContentWrapper>
+              {portfolio === 'empty' ?
+                  'Не указан путь до портфолио' :
+                  null}
+              {portfolio && portfolio !== 'empty' ?
+                  portfolio.groups.map(
+                      (group, index) => <Group
+                          key={index}
+                          group={group}
+                      />) :
+                  null}
+            </ContentWrapper>
+          </PageContent>
+        </PageWrapper>
+    );
   }
 }
+
+const mapStateToProps = state => ({
+  portfolio: state.portfolio.status,
+});
+
+export default connect(mapStateToProps)(PortfolioPage);

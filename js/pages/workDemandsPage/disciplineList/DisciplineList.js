@@ -24,7 +24,10 @@ export default class DisciplineList extends React.Component {
           <SDisciplineList>
             {disciplines && disciplines.map((discipline, index) =>
                 <SDisciplineListItem
-                    onClick={() => setSelectedDiscipline(discipline.shortName)}
+                    selected={this.props.selectedDisciplineName.shortName ===
+                    discipline.shortName}
+                    onClick={() => setSelectedDiscipline(discipline.fullName,
+                        discipline.shortName)}
                     key={index}>
                   {discipline.shortName}
                 </SDisciplineListItem>,

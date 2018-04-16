@@ -30,7 +30,7 @@ export function getInfoFromFileName(fileName: string): fileInfo {
   const workName = arrOfInfo[3].split('.')[0];
 
   const workType = convertWorkAbbr(workName[0] + workName[1]);
-  const workNumber = parseInt(workName.substring(2), 10);
+  const workNumber = workName.substring(2);
 
   return {
     group: arrOfInfo[0],

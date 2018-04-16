@@ -17,27 +17,41 @@ const SRow = styled.div`
   flex-direction: row;
 `;
 
-const SActionWrapper = styled.span`
-  margin-left: 15px;
-  cursor: pointer;
-  
-  &:hover {
-    color: red;  
-  }
-`;
+import {
+  STable,
+  STableHeader,
+  STableBody,
+  STableCell,
+  STableRow,
+} from '../../../components/table/TableStyles';
+import Button from '../../../components/button/Button';
 
 import {
-  SStudentsListWrapper,
   SGroupInfoWrapper,
-  SStudentsList,
-  SStudentsListItem,
+  SEditButton,
+  SRemoveButton,
+  SStudentsTableWrapper,
+  SActionsWrapper,
+  SStudentsTableRow,
+  SFooterActions,
 } from './styles';
 
-export default class GroupInfo extends React.Component {
+type TGroupInfoProps = {
+  group: any,
+}
+
+export default class GroupInfo extends React.Component<TGroupInfoProps, {}> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      editedStudent: '',
+    }
+  }
+
   render() {
     const {group} = this.props;
     if (!group) {
-      return <SGroupInfoWrapper/>
+      return <SGroupInfoWrapper/>;
     }
 
     const students = group.students;
@@ -49,35 +63,75 @@ export default class GroupInfo extends React.Component {
               <SColumnHeader>Информация о группе:</SColumnHeader>
               <SRow>Профиль {group.profile}</SRow>
               <SRow>Направление {group.direction}</SRow>
-              <SRow>Отделение {printStudyType(group.studyType)} <span onClick={() => this.props.changeField('type', 'Очное')}>Изменить</span></SRow>
+              <SRow>Отделение {printStudyType(group.studyType)} <span
+                  onClick={() => this.props.changeField('type',
+                      'Очное')}>Изменить</span></SRow>
             </SColumn>
-            <SStudentsListWrapper>
-              <SStudentsList>
-                Список студентов
-                {students.map(
-                    (student, index) =>
-                        <SStudentsListItem key={index}>
-                          <span>
-                            {`${index + 1}. ${getStudentName(student)}`}
-                              </span>
-                          <SActionWrapper onClick={this.props.editStudent}>
-                            Изменить
-                          </SActionWrapper>
-                          <SActionWrapper
-                              onClick={() => this.props.removeStudent(student)}>
-                            Удалить
-                          </SActionWrapper>
-                        </SStudentsListItem>)}
-                <div onClick={() => this.props.addStudent(
-                    'Никитин Андрей Акакевич')}>Добавить студента
-                </div>
-                <div onClick={() => this.props.removeGroup()}>Удалить
-                  группу
-                </div>
-              </SStudentsList>
-            </SStudentsListWrapper>
+            <SStudentsTableWrapper>
+              <STable>
+                {this.renderHeader()}
+                <STableBody>
+                  {students.map(
+                      (student, index) =>
+                          <SStudentsTableRow key={index}>
+                            <STableCell key={0}>
+                              {`${index + 1}. ${getStudentName(student)}`}
+                            </STableCell>
+                            {this.renderActions(student)}
+                          </SStudentsTableRow>)}
+                </STableBody>
+              </STable>
+            </SStudentsTableWrapper>
+            <SFooterActions>
+              <Button color='success'
+                      onClick={() => this.props.addStudent(
+                  'Никитин Андрей Акакевич')}
+                      text='Добавить студента'/>
+              <Button color='danger'
+                      onClick={() => this.props.removeGroup()}
+                      text='Удалить группу'/>
+            </SFooterActions>
           </div> : null}
         </SGroupInfoWrapper>
     );
+  }
+
+  renderHeader() {
+    const titles = ['ФИО студента', 'Действия'];
+
+    return (
+        <STableHeader>
+          <STableRow>
+            {titles.map(
+                (title, index) => <STableCell key={index}>{title}</STableCell>)}
+          </STableRow>
+        </STableHeader>
+    );
+  }
+
+  renderActions(student) {
+    return (
+        <STableCell key={999}>
+          <SActionsWrapper>
+            <SEditButton
+                onClick={() => this.editStudent()}>
+              Изменить
+            </SEditButton>
+            <SRemoveButton
+                onClick={() => this.props.removeStudent(student)}>
+              Удалить
+            </SRemoveButton>
+          </SActionsWrapper>
+        </STableCell>
+    );
+  }
+
+  editInfo(infoType: string, newInfo: string) {
+
+  }
+
+  editStudent() {
+
+    this.props.editStudent();
   }
 }

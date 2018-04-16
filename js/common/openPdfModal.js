@@ -5,6 +5,10 @@ const {BrowserWindow} = electron.remote;
 const path = require('path');
 const url = require('url');
 
+
+import store from '../reducers/store';
+import {startLoading, updatePortfolio} from '../reducers/actions';
+
 export default function openWorks(
     paths: Array<string>,
     studentsInfoArr: Array<{ fullName: TStudentFullName, groupName: string }>): void {
@@ -37,7 +41,6 @@ export default function openWorks(
         });
   });
   contents.on('destroyed', () => {
-    console.log('destroyed');
-    //TODO update portfolio
+    store.dispatch(updatePortfolio());
   });
 }

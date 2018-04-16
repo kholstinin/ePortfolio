@@ -1,37 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import studyTypes from '../../../../data/studyType';
-
 import {
   SDisciplineListWrapper,
   SDisciplineInfoWrapper,
   SDisciplineListItem,
   SDisciplineList,
+  SColumnHeader,
+  SColumn,
+  SRow,
+  SActionWrapper
 } from './styles';
 
-const SColumnHeader = styled.div`
-  margin-bottom: 10px;
-`;
-
-const SColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const SRow = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const SActionWrapper = styled.span`
-  margin-left: 15px;
-  cursor: pointer;
-  
-  &:hover {
-    color: red;  
-  }
-`;
+import {printStudyType} from '../../../common/utils';
 
 export default class GroupInfo extends React.Component {
   render() {
@@ -44,7 +25,7 @@ export default class GroupInfo extends React.Component {
             <SRow>Полное название дисциплины: {disciplineInfo.fullName}</SRow>
             <SRow>Сокращенное название
               дисциплины: {disciplineInfo.shortName}</SRow>
-            <SRow>Форма обучения: {studyTypes[disciplineInfo.type]}</SRow>
+            <SRow>Форма обучения: {printStudyType(disciplineInfo.type)}</SRow>
           </SColumn>}
           {disciplineInfo && disciplineInfo.works && <SDisciplineListWrapper>
             <SDisciplineList>

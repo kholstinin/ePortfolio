@@ -1,25 +1,25 @@
 import styled from 'styled-components';
+import {STableButton, STableRow} from '../../components/table/TableStyles';
 
-const Button = styled.div`
-  display: inline-block;
-  padding: 0 10px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 16px;
-  margin-right: 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  color: #fff;
-`;
-
-export const SRemoveBtn = Button.extend`
+export const SRemoveBtn = STableButton.extend`
   background-color: red;
 `;
 
-export const SOpenBtn = Button.extend`
+export const SOpenBtn = STableButton.extend`
   background-color: green;
 `;
 
 export const SButtonWrapper = styled.div`
   margin-top: 10px;  
+`;
+
+export const SActionsWrapper = styled.div`
+  
+  & > * {
+    margin-right: 15px;
+  }    
+`;
+
+export const SPathsRow = STableRow.extend`
+  cursor: default;  
 `;

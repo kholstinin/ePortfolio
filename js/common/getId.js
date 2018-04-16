@@ -19,5 +19,5 @@ export function getStudentId(groupName: string, studentFullName: string | TStude
 }
 
 export function getDisciplineId(disciplineName: string, type: string): string {
-  return cyrillicToTranslit().transform(`${type}_${disciplineName}`);
+  return cyrillicToTranslit().transform(`${type}_${disciplineName}`, '_');
 }

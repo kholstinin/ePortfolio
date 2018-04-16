@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 import LeftMenu from '../../../components/tablePage/LeftMenu';
 
+const hoverColor = '#eceff1';
+
 export const SGroupListWrapper = LeftMenu.extend`
   
 `;
+
 
 export const SGroupList = styled.ul`
   padding: 0;
@@ -13,6 +16,7 @@ export const SGroupList = styled.ul`
 
 export const SGroupListItem = styled.li`
   width: 100%;
+  background-color: ${props => props.selected ? hoverColor : 'transparent'};
   text-align: center;
   cursor: pointer;
   height: 30px;
@@ -20,7 +24,7 @@ export const SGroupListItem = styled.li`
   font-size: 18px;
   
   &:hover {
-    background-color: #eceff1;
+    background-color: ${hoverColor};
   }
 `;
 

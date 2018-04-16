@@ -1,75 +1,31 @@
 import React from 'react';
-import styled from 'styled-components';
-import worksHandler from '../../common/worksHandler';
+import {connect} from 'react-redux';
 
 import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 
 import openWorks from '../../common/openPdfModal';
 import {getInfoFromFileName} from '../../common/nameSplit';
 
-const STableWrapper = styled.div`
-  height: 600px;
-  overflow-y: auto;
-`;
+import {
+  STableWrapper,
+  SWorkTable,
+  SWorkTableBody,
+  SWorkTableRow,
+  SWorkTableHeader,
+  SWorkTableCell,
+  SControls
+} from './styles';
 
-const SWorkTable = styled.div`
-  display: table;
-  width: 100%;
-`;
-
-const SWorkTableBody = styled.div`
-  display: table-row-group;
-`;
-
-const SWorkTableRow = styled.div`
-  display: table-row;
-  cursor: pointer;
-  
-  &:hover {
-    background-color: #dcdcdc;
-  }
-`;
-
-const SWorkTableHeader = styled.div`
-  display: table-header-group;
-  cursor: default;
-  
-  &:hover ${SWorkTableRow}{
-    background-color: transparent ;
-  }
-`;
-
-const SWorkTableCell = styled.div`
-  display: table-cell;
-  padding: 5px;
-  border-bottom: 1px solid #000;
-`;
-
-const SControls = styled.div`
-  width: 100%;
-  height: 80px;
-`;
-
-export default class ReviewPage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      works: worksHandler.getUnverifiedWorks(),
-    };
-  }
-
+class ReviewPage extends React.Component {
   render() {
-    const {works} = this.state;
-    const workInfo = this.getInfoFromWorks();
-    const workPaths = this.getPathsFromWorks();
+    const {works} = this.props;
 
     return (
         <PageWrapper>
           <PageHeader text='Работы на проверку'/>
           <PageContent>
             <SControls>
-              <a onClick={() => openWorks(workPaths, workInfo)}>
+              <a onClick={() => openWorks(this.getInfoFromWorks(), this.getPathsFromWorks())}>
                 Начать проверять все работы
               </a>
             </SControls>
@@ -138,3 +94,9 @@ export default class ReviewPage extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  works: state.works.unverifiedWorks,
+});
+
+export default connect(mapStateToProps)(ReviewPage);

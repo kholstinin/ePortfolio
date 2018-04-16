@@ -1,57 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 import {connect} from 'react-redux';
-import {CHANGE_ROUTE} from '../../reducers/actionTypes';
+import {changeRoute, updatePortfolio} from '../../reducers/actions';
+import {mainColor} from '../../common/palette';
 
-import {pageColor} from '../../common/palette';
+import MenuItem from './MenuItem';
 
-const SMenu = styled.div`
-  width: 200px;
-  height: 100%;
-`;
-
-const SMenuWrapper = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-`;
-
-const itemHeight = 50;
-const activeColor = '#e8eaf6';
-const SMenuItem = styled.li`
-  cursor: pointer;
-  width: 100%;
-  height: ${itemHeight}px;
-  line-height: ${itemHeight}px;
-  background-color: ${props => props.active ? activeColor : 'transparent'}
-  text-align: center;
-  
-  &:hover {
-        background-color: ${activeColor};
-      }
-`;
-
-const SButtonsWrapper = styled.div`
-  width: 100%;
-  height: 120px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  background-color: ${pageColor}
-`;
-
-const SRefreshButton = styled.div`
-  width: 30px;
-  height: 30px;
-  border-radius: 4px;
-  background-color: #fff;
-  cursor: pointer;
-  
-  &:hover {
-        background-color: #dedede;
-      }
-`;
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const menuItems = [
   {name: 'Корневые каталоги', route: 'root'},
@@ -64,11 +18,16 @@ const menuItems = [
   {name: 'Рабочие программы', route: 'demands'},
 ];
 
-type MenuProps = {}
+import {
+  SMenu,
+  SMenuWrapper,
+  SButtonsWrapper,
+  SRefreshButton,
+} from './styles';
 
-type MenuState = {}
+import type {MenuProps} from './typings';
 
-class Menu extends React.Component<MenuProps, MenuState> {
+class Menu extends React.Component<MenuProps, {}> {
   render() {
     const {route} = this.props;
 
@@ -76,15 +35,18 @@ class Menu extends React.Component<MenuProps, MenuState> {
         <SMenu>
           <SButtonsWrapper>
             <SRefreshButton onClick={this.props.updatePortfolio}>
-              Обн
+              <FontAwesomeIcon
+                  icon="sync"
+                  transform={{size: 25, x: 7, y: 7}}
+                  color={mainColor}
+              />
             </SRefreshButton>
-            <SRefreshButton>Син</SRefreshButton>
           </SButtonsWrapper>
           <SMenuWrapper>
             {menuItems.map(
                 (item, index) =>
                     <MenuItem key={index}
-                              setRoute={() => this.props.changeRoute(
+                              setRoute={() => this.props.setRoute(
                                   item.route)}
                               active={route === item.route}
                               text={item.name}
@@ -95,25 +57,13 @@ class Menu extends React.Component<MenuProps, MenuState> {
   }
 }
 
-type MenuItemProps = {};
-
-class MenuItem extends React.Component<MenuItemProps> {
-  render() {
-    return (
-        <SMenuItem onClick={this.props.setRoute} active={this.props.active}>
-          {this.props.text}
-        </SMenuItem>
-    );
-  }
-}
-
 const mapStateToProps = state => ({
   route: state.router.activeRoute,
 });
 
 const mapDispatchToProps = dispatch => ({
-  changeRoute: route => dispatch(
-      {type: CHANGE_ROUTE, payload: route}),
+  setRoute: route => dispatch(changeRoute(route)),
+  updatePortfolio: () => dispatch(updatePortfolio()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

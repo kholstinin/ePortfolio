@@ -8,7 +8,7 @@ const {BrowserWindow} = electron.remote;
 import Button from '../components/button/Button';
 import {portfDB} from '../common/databases';
 
-import StudentPortfolioUtil from '../common/portfolioDisciplineUtil';
+import StudentPortfolioUtil from '../common/StudentPortfolioUtil';
 import {getInfoFromFileName} from '../common/nameSplit';
 import {getStudentId} from '../common/getId';
 
@@ -158,6 +158,7 @@ class App extends React.Component {
 
     this.putWorkInPortfolio(studentInfo, workStatus).then((res) => {
       if (res.ok) {
+
         if (pathsToPdf.length === 1 || currentWorkNumber > pathsToPdf.length) {
           currentWin.close();
         }
@@ -188,7 +189,8 @@ class App extends React.Component {
       const studentPortfolio = new StudentPortfolioUtil(doc);
       studentPortfolio.addWork(discipline, workType, workNumber,
           workStatus);
-      portfDB.put(studentPortfolio.getPortfolio());
+
+      return portfDB.put(studentPortfolio.getPortfolio());
     }).catch(err => {
       console.log(err);
     });

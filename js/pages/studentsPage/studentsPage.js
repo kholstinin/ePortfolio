@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import StudentsModal from '../../components/modals/studentsModal/StudentsModal';
+
 import Modal from '../../components/modal/Modal';
+import StudentsModal from '../../components/modals/studentsModal/StudentsModal';
+import WarningModal from '../../components/modals/warningModal/WarningModal';
 import GroupList from './groupList/GroupList';
 import GroupInfo from './groupInfo/GroupInfo';
 
@@ -10,6 +12,8 @@ import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 import {splitStudent, getDocs, compareStudents} from '../../common/utils';
 import {studDB} from '../../common/databases';
 import {getGroupId} from '../../common/getId';
+
+
 import type {TGroupInfo} from '../../typings/Group';
 
 const modalStyles = {
@@ -34,6 +38,7 @@ export default class StudentsPage extends React.Component {
       studentsByGroup: [],
       groupModalVisible: false,
       studentsModalVisible: false,
+      warningModalVisible: false,
       loading: false,
       groupInput: '',
       selectedGroupName: '',
@@ -49,6 +54,12 @@ export default class StudentsPage extends React.Component {
 
     return (
         <PageWrapper>
+          <WarningModal
+              visible={this.state.warningModalVisible}
+              onConfirmClick={this.removeGroup}
+              warningText='Вы уверены что хотите удалить группу?'
+              confirmActionText='Удалить группу'
+          />
           <Modal
               modalVisible={this.state.groupModalVisible}
               title='Добавить группу'
@@ -65,6 +76,7 @@ export default class StudentsPage extends React.Component {
             <SPageContent>
               <GroupList
                   studentsByGroup={studentsByGroup}
+                  selectedGroupName={selectedGroupName}
                   onListItemClick={this.onListItemClick}
                   groupInput={groupInput}
                   addGroup={this.openGroupModal}

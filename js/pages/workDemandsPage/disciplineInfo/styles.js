@@ -18,3 +18,26 @@ export const SDisciplineListItem = styled.li`
 export const SDisciplineInfoWrapper = TablePageContent.extend`
     
 `;
+
+export const SColumnHeader = styled.div`
+  margin-bottom: 10px;
+`;
+
+export const SColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const SRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const SActionWrapper = styled.span`
+  margin-left: 15px;
+  cursor: pointer;
+  
+  &:hover {
+    color: red;  
+  }
+`;

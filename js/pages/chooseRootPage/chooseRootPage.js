@@ -2,12 +2,10 @@ import React from 'react';
 
 const {shell} = require('electron');
 const storage = require('electron-json-storage');
+const {dialog} = require('electron').remote;
 
 import Button from '../../components/button/Button';
 import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
-
-const remote = require('electron').remote;
-const {dialog} = remote;
 
 import {storage_portfolioKey} from '../../common/global';
 
@@ -15,6 +13,8 @@ import {
   SButtonWrapper,
   SRemoveBtn,
   SOpenBtn,
+  SActionsWrapper,
+  SPathsRow,
 } from './styles';
 
 import {
@@ -52,10 +52,10 @@ export default class ChooseRootPage extends React.Component {
               {paths && paths.length ?
                   <STableBody>
                     {paths.map((path, index) =>
-                        <STableRow key={index}>
+                        <SPathsRow key={index}>
                           <STableCell key={0}>{path}</STableCell>
                           {this.renderActions(path)}
-                        </STableRow>)}
+                        </SPathsRow>)}
                   </STableBody> : null}
             </STable>
             <SButtonWrapper>
@@ -84,12 +84,14 @@ export default class ChooseRootPage extends React.Component {
   renderActions(path) {
     return (
         <STableCell key={1}>
-          <SOpenBtn onClick={() => this.openDir(path)}>
-            Посмотреть в проводнике
-          </SOpenBtn>
-          <SRemoveBtn onClick={() => this.removePath(path)}>
-            Удалить путь
-          </SRemoveBtn>
+          <SActionsWrapper>
+            <SOpenBtn onClick={() => this.openDir(path)}>
+              Посмотреть в проводнике
+            </SOpenBtn>
+            <SRemoveBtn onClick={() => this.removePath(path)}>
+              Удалить путь
+            </SRemoveBtn>
+          </SActionsWrapper>
         </STableCell>
     );
   }
@@ -132,7 +134,7 @@ export default class ChooseRootPage extends React.Component {
       if (!err) {
         this.setState({paths: newState});
       } else {
-        alert('oops, somehting goes wrong'); //TODO write normal err handler
+        alert('oops, something goes wrong'); //TODO write normal err handler
       }
     });
   };

@@ -12,3 +12,5 @@ export type TSelectOption = {
   label: string,
   value: string | number,
 }
+
+export type TRoute = string;

@@ -1,17 +1,25 @@
 import Work from './work';
-import {discDB} from '../../common/databases';
+import {discDB, portfDB} from '../../common/databases';
 import {getDisciplineId} from '../getId';
-import worksHandler from '../worksHandler';
+
+import store from '../../reducers/store';
+import {addReference, addWrongWork} from '../../reducers/actions';
 
 import {TStudentPortfolio} from '../../typings/Portfolio';
 import {TStudyType} from '../../typings/Common';
+import StudentPortfolioUtil from '../StudentPortfolioUtil';
+import {validateDiscipline} from '../portfolioUtils';
 
 export default class Discipline {
-  _tree = {};
-  _portfolioStatus = {};
+  _tree: Array<dirTree>;
+  _portfolioStatus: TStudentPortfolio;
 
   name = '';
+  path = '';
   fullName = '';
+  studentFullName = '';
+  groupName = '';
+  studyType = '';
   works = [];
   isDone = false;
 
@@ -19,25 +27,41 @@ export default class Discipline {
       tree: dirTree, groupName: string, studentFullName: string,
       portfolioStatus: TStudentPortfolio, studyType: TStudyType) {
     this._tree = tree.children;
+    this.path = tree.path;
     this._portfolioStatus = portfolioStatus;
 
-    this.name = tree.name;
+    this.fullName = tree.name;
     this.studentFullName = studentFullName;
     this.groupName = groupName;
     this.studyType = studyType;
   }
 
   initialiseDiscipline() {
-    const id = getDisciplineId(this.name, this.studyType);
+    const id = getDisciplineId(this.fullName, this.studyType);
     discDB.get(id).then(discipline => {
       const needWorks = discipline.works;
-      this.fullName = discipline.fullName;
+      this.name = discipline.shortName;
 
       const disciplinePortfolioStatus = this._portfolioStatus.portfolio.find(
           item => item.disciplineName === this.name);
 
       if (disciplinePortfolioStatus) {
-        this.isDone = disciplinePortfolioStatus.isDone;
+        this.isDone = disciplinePortfolioStatus.isDone || false;
+        if (!this.isDone) {
+          const isDone = validateDiscipline(needWorks,
+              disciplinePortfolioStatus);
+
+          if (isDone) {
+            const studentPortfolio = new StudentPortfolioUtil(
+                this._portfolioStatus);
+            studentPortfolio.setDisciplineDone(this.name);
+
+            portfDB.put(studentPortfolio.getPortfolio());
+            store.dispatch(addReference(this));
+          }
+        } else {
+          store.dispatch(addReference(this));
+        }
       }
 
       this.works = this._tree.map(
@@ -46,9 +70,10 @@ export default class Discipline {
               needWorks,
               disciplinePortfolioStatus));
     }).catch(err => {
+      console.log(err);
       if (err.name === 'not_found') {
         this.err = 'Такой дисциплины не существует';
-        worksHandler.addWrongWork(this);
+        store.dispatch(addWrongWork(this));
       }
     });
   }

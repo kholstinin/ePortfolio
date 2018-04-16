@@ -7,7 +7,8 @@
     "test": "jest",
     "start": "./node_modules/.bin/electron .",
     "watch": "./node_modules/.bin/webpack --mode development -w",
-    "build": "./node_modules/.bin/webpack --mode production -d",
+    "build": "./node_modules/.bin/webpack --mode production",
+    "buildApp": "electron-packager ./ ePortfolio --platforn=win32 --arch=ia32",
     "serve": "webpack-dev-server --mode development"
   },
   "repository": {
@@ -21,6 +22,10 @@
   },
   "homepage": "https://github.com/kholstinin/ePortfolio#readme",
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.5",
+    "@fortawesome/fontawesome-free-brands": "^5.0.10",
+    "@fortawesome/fontawesome-free-solid": "^5.0.10",
+    "@fortawesome/react-fontawesome": "0.0.18",
     "cyrillic-to-translit-js": "^2.0.0",
     "directory-tree": "^2.1.0",
     "electron": "^1.8.4",
@@ -29,12 +34,13 @@
     "pouchdb-find": "^6.4.3",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
-    "react-fontawesome": "^1.6.1",
+    "react-loader": "^2.4.3",
     "react-modal": "^3.3.2",
     "react-pdf-js": "^3.0.7",
     "react-redux": "^5.0.7",
     "react-tippy": "^1.2.2",
     "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "styled-components": "^3.2.5"
   },
   "devDependencies": {
@@ -46,6 +52,7 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
+    "electron-packager": "^12.0.1",
     "electron-react-devtools": "^0.5.3",
     "electron-rebuild": "^1.7.3",
     "flow-bin": "^0.69.0",

@@ -6,8 +6,8 @@ RModal.setAppElement('#content');
 type TModalProps = {
   title: string,
   modalVisible: boolean,
-  closeModal: (any) => any,
-  modalStyle: {},
+  closeModal?: (any) => any,
+  modalStyle?: {},
 };
 
 type TModalState = {

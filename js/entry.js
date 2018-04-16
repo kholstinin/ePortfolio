@@ -1,11 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import store from './reducers/store';
 
 const storage = require('electron-json-storage');
 import {injectGlobal} from 'styled-components';
 //PouchDB.plugin(require('pouchdb-find'));
 
-import App from './App';
+import fontawesome from '@fortawesome/fontawesome'
+import faSync from '@fortawesome/fontawesome-free-solid/faSync';
+
+
+fontawesome.library.add(faSync);
+
+import App from './pages/App/App';
 
 injectGlobal`
   *, *:before, *:after {
@@ -32,4 +40,9 @@ injectGlobal`
 const currentPath = process.cwd();
 storage.setDataPath(currentPath + '/storage');
 
-ReactDOM.render(<App/>, document.getElementById('content'));
+ReactDOM.render(
+    <Provider store={store}>
+      <App/>
+    </Provider>,
+    document.getElementById('content'),
+);

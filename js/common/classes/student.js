@@ -2,7 +2,8 @@ import Discipline from './discipline';
 import {getNameWithInitials} from '../nameSplit';
 import {getStudentId} from '../getId';
 
-import worksHandler from '../worksHandler';
+import store from '../../reducers/store';
+import {addWrongWork} from '../../reducers/actions';
 
 import {portfDB} from '../databases';
 import type {TStudentFullName} from '../../typings/StudentFullName';
@@ -56,7 +57,7 @@ export default class Student {
       });
     } else {
       this.err = 'Нет такого студента';
-      worksHandler.addWrongWork(this);
+      store.dispatch(addWrongWork(this));
     }
   }
 

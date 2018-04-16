@@ -13,7 +13,6 @@ import {discDB} from '../../common/databases';
 import {getDisciplineId} from '../../common/getId';
 import {getDocs} from '../../common/utils';
 
-
 import type {TDisciplineInfo} from '../../typings/Discipline';
 
 const SPageContent = styled.div`
@@ -32,12 +31,16 @@ const modalStyles = {
 
 export default class WorkDemandsPage extends React.Component {
   constructor(props) {
+    console.log('init');
     super(props);
 
     this.state = {
       disciplineModalVisible: false,
       allDisciplines: [],
-      selectedDisciplineName: '',
+      selectedDisciplineName: {
+        fullName: '',
+        shortName: '',
+      },
     };
   }
 
@@ -65,6 +68,7 @@ export default class WorkDemandsPage extends React.Component {
           <PageContent noPadding>
             <SPageContent>
               <DisciplineList
+                  selectedDisciplineName={this.state.selectedDisciplineName}
                   disciplines={allDisciplines}
                   addDiscipline={this.openDisciplineModal}
                   setSelectedDiscipline={this.setSelectedDiscipline}
@@ -80,13 +84,19 @@ export default class WorkDemandsPage extends React.Component {
     );
   }
 
-  setSelectedDiscipline = (disciplineName: string) => {
-    this.setState({selectedDisciplineName: disciplineName});
+  setSelectedDiscipline = (fullName: string, shortName: string) => {
+    this.setState({
+      selectedDisciplineName: {
+        fullName,
+        shortName,
+      },
+    });
   };
 
   getSelectedDiscipline = () => {
     return this.state.allDisciplines.find(
-        discipline => discipline.shortName === this.state.selectedDisciplineName);
+        discipline => discipline.shortName ===
+            this.state.selectedDisciplineName.shortName);
   };
 
   fetchDisciplines() {
@@ -102,7 +112,7 @@ export default class WorkDemandsPage extends React.Component {
   }
 
   addDiscipline = (disciplineInfo: TDisciplineInfo) => {
-    const id = getDisciplineId(disciplineInfo.shortName, disciplineInfo.type);
+    const id = getDisciplineId(disciplineInfo.fullName, disciplineInfo.type);
     const doc = {
       _id: id,
       ...disciplineInfo,
@@ -118,7 +128,8 @@ export default class WorkDemandsPage extends React.Component {
   };
 
   removeDiscipline = (type: string) => {
-    const id = getDisciplineId(this.state.selectedDisciplineName, type);
+    const id = getDisciplineId(this.state.selectedDisciplineName.fullName,
+        type);
 
     discDB.get(id).then((doc) => {
       return discDB.remove(doc);

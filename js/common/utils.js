@@ -1,4 +1,5 @@
-import studyTypes from '../../data/studyType';
+import studyTypes from '../../data/studyTypes';
+
 import type {TStudentFullName} from '../typings/StudentFullName';
 import type {
   TDisciplineType,
@@ -79,10 +80,5 @@ export function compareStudents(
 }
 
 export function printStudyType(studyType: TStudyType): string {
-  const studyTypes = {
-    fullTime: "Очное",
-    partTime: "Заочное"
-  };
-
   return studyTypes[studyType];
 }
