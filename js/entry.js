@@ -10,7 +10,6 @@ import {injectGlobal} from 'styled-components';
 import fontawesome from '@fortawesome/fontawesome'
 import faSync from '@fortawesome/fontawesome-free-solid/faSync';
 
-
 fontawesome.library.add(faSync);
 
 import App from './pages/App/App';

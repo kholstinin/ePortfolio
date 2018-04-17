@@ -41,12 +41,12 @@ export const SDisciplineListInput = styled.input`
   margin-bottom: 15px;
 `;
 
-export const SDisciplineListInputWrapper =styled.div`
+export const SDisciplineListInputWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: center;
 `;
-
 
 export const SDisciplineButton = styled.div`
   width: 100%;
@@ -55,4 +55,14 @@ export const SDisciplineButton = styled.div`
   justify-content: center;
   position: absolute;
   bottom: 10px;
+`;
+
+export const SDisciplineListInputClear = styled.div`
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #dedede;
+  right: 5px;
+  top: 1px;
+  cursor: pointer;
 `;

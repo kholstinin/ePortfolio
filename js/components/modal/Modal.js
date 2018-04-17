@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import RModal from 'react-modal';
 
 RModal.setAppElement('#content');
@@ -10,9 +11,18 @@ type TModalProps = {
   modalStyle?: {},
 };
 
-type TModalState = {
+type TModalState = {};
 
-};
+const SCloseIconWrapper = styled.div`
+  width: 30px;
+  height: 30px;
+  background-color: #dedede;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+`;
+
 
 export default class Modal extends React.Component<TModalProps, TModalState> {
   render() {
@@ -23,7 +33,10 @@ export default class Modal extends React.Component<TModalProps, TModalState> {
             onRequestClose={this.props.onRequestClose}
             style={this.props.styles}
         >
-          {this.props.children}
+          <div>
+            <SCloseIconWrapper onClick={this.props.onRequestClose} />
+            {this.props.children}
+          </div>
         </RModal>
     );
   }

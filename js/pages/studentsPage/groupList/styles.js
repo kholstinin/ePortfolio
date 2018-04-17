@@ -42,10 +42,21 @@ export const SGroupListInput = styled.input`
   margin-bottom: 15px;
 `;
 
-export const SGroupListInputWrapper =styled.div`
+export const SGroupListInputWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: center;
+`;
+
+export const SGroupListInputClearIcon = styled.div`
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #dedede;
+  right: 5px;
+  top: 1px;
+  cursor: pointer;
 `;
 
 export const SGroupButton = styled.div`

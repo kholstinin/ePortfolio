@@ -13,6 +13,7 @@ import {
   SColumn,
   SRow,
   SLabel,
+  SButtonWrapper
 } from './styles';
 
 import {TGroupModalProps, TGroupModalState} from './typings';
@@ -34,7 +35,7 @@ export default class StudentsModal extends React.Component<TGroupModalProps, TGr
   render() {
     return (
         <div>
-          <SModalHeader>Добавьте группу</SModalHeader>
+          <SModalHeader>Введите данные группы</SModalHeader>
           <SColumn>
             <SRow>
               <SLabel>Название группы:</SLabel>
@@ -66,12 +67,14 @@ export default class StudentsModal extends React.Component<TGroupModalProps, TGr
             </SRow>
           </SColumn>
           <SModalHeader>
-            Добавьте студентов (ФИО, каждый с новой строчки, разделять пробелом)
+            Добавьте студентов (ФИО, разделять пробелом, каждый с новой строчки)
           </SModalHeader>
           <SInputArea text={this.state.students}
                       onChange={(e) => this.setState(
                           {students: e.target.value})}/>
-          <Button text='Добавить группу' onClick={this.onAddClick}/>
+          <SButtonWrapper>
+            <Button text='Добавить группу' onClick={this.onAddClick}/>
+          </SButtonWrapper>
         </div>);
   }
 

@@ -8,6 +8,7 @@ import {
   SRow,
   SLabel,
   SSelectInputWrapper,
+  SButtonWrapper,
 } from './styles';
 
 import {getWorkObj, getStudyTypes} from '../../../common/utils';
@@ -34,7 +35,7 @@ export default class DisciplineModal extends React.Component<TDisciplineModalPro
   render() {
     return (
         <div>
-          <SModalHeader>Добавьте группу</SModalHeader>
+          <SModalHeader>Данные для дисциплины</SModalHeader>
           <SColumn>
             <SRow>
               <SLabel>Полное название дисциплины:</SLabel>
@@ -92,9 +93,10 @@ export default class DisciplineModal extends React.Component<TDisciplineModalPro
                     onItemPress={(course) => this.setState({course})}/>
               </SSelectInputWrapper>
             </SRow>
-
           </SColumn>
-          <Button text='Добавить дисциплину' onClick={this.onAddClick}/>
+          <SButtonWrapper><Button text='Добавить дисциплину'
+                                  onClick={this.onAddClick}/>
+          </SButtonWrapper>
         </div>);
   }
 

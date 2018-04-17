@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
 
 import Modal from '../../components/modal/Modal';
@@ -13,13 +14,14 @@ import {splitStudent, getDocs, compareStudents} from '../../common/utils';
 import {studDB} from '../../common/databases';
 import {getGroupId} from '../../common/getId';
 
-
 import type {TGroupInfo} from '../../typings/Group';
+import {showWarningModal} from '../../reducers/actions';
 
 const modalStyles = {
   content: {
     width: '700px',
-    margin: '0 auto',
+    height: '750px',
+    margin: '50px auto 0',
   },
 };
 
@@ -30,7 +32,7 @@ const SPageContent = styled.div`
   padding-top: 80px;
 `;
 
-export default class StudentsPage extends React.Component {
+class StudentsPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -75,10 +77,11 @@ export default class StudentsPage extends React.Component {
           <PageContent noPadding>
             <SPageContent>
               <GroupList
-                  studentsByGroup={studentsByGroup}
+                  studentsByGroup={this.filterGroupList(studentsByGroup)}
                   selectedGroupName={selectedGroupName}
                   onListItemClick={this.onListItemClick}
                   groupInput={groupInput}
+                  onInputChange={(groupInput) => this.setState({groupInput})}
                   addGroup={this.openGroupModal}
               />
               <GroupInfo
@@ -96,7 +99,16 @@ export default class StudentsPage extends React.Component {
     );
   }
 
+  filterGroupList(studentsByGroup) {
+    const {groupInput} = this.state;
 
+    if (groupInput !== '') {
+      return studentsByGroup.filter(
+          group => group.name.toLowerCase().includes(groupInput.toLowerCase()));
+    }
+
+    return studentsByGroup;
+  }
 
   onListItemClick = (groupName: string): void => {
     this.setState({
@@ -146,18 +158,25 @@ export default class StudentsPage extends React.Component {
       }
     }).catch(err => {
       //TODO
+      console.log(err);
     });
   };
 
   removeGroup = () => {
     const id = getGroupId(this.state.selectedGroupName);
 
-    studDB.get(id).then((doc) => {
-      return studDB.remove(doc);
-    }).then(res => {
-      if (res.ok) {
-        this.fetchGroups();
-      }
+    this.props.openWarningModal({
+      confirmActionText: 'Удалить группу',
+      warningText: 'Вы уверены что хотите удалить группу?',
+      onConfirmClose: () => {
+        studDB.get(id).then((doc) => {
+          return studDB.remove(doc);
+        }).then(res => {
+          if (res.ok) {
+            this.fetchGroups();
+          }
+        });
+      },
     });
   };
 
@@ -175,6 +194,7 @@ export default class StudentsPage extends React.Component {
         }
       }).catch(err => {
         //TODO
+        console.log(err);
       });
     });
   };
@@ -182,22 +202,29 @@ export default class StudentsPage extends React.Component {
   removeStudent = (studentName: string) => {
     const id = getGroupId(this.state.selectedGroupName);
 
-    studDB.get(id).then((doc) => {
-      let newStudents = doc.students.map(item => item);
-      const indexOfStudent = doc.students.findIndex(student => {
-        return compareStudents(student, studentName);
-      });
+    this.props.openWarningModal({
+      confirmActionText: 'Удалить группу',
+      warningText: 'Вы уверены что хотите удалить группу?',
+      onConfirmClose: () => {
+        studDB.get(id).then((doc) => {
+          let newStudents = doc.students.map(item => item);
+          const indexOfStudent = doc.students.findIndex(student => {
+            return compareStudents(student, studentName);
+          });
 
-      newStudents.splice(indexOfStudent, 1);
-      const newDoc = {...doc, students: newStudents};
+          newStudents.splice(indexOfStudent, 1);
+          const newDoc = {...doc, students: newStudents};
 
-      studDB.put(newDoc).then(res => {
-        if (res.ok) {
-          this.fetchGroups();
-        }
-      }).catch(err => {
-        //TODO
-      });
+          studDB.put(newDoc).then(res => {
+            if (res.ok) {
+              this.fetchGroups();
+            }
+          }).catch(err => {
+            //TODO
+            console.log(err);
+          });
+        });
+      },
     });
   };
 
@@ -206,6 +233,7 @@ export default class StudentsPage extends React.Component {
 
     studDB.get(id).then((doc) => {
       const newDoc = {
+
         ...doc,
         [fieldName]: newFieldValue,
       };
@@ -215,6 +243,7 @@ export default class StudentsPage extends React.Component {
         }
       }).catch(err => {
         //TODO
+        console.log(err);
       });
     });
   };
@@ -222,5 +251,12 @@ export default class StudentsPage extends React.Component {
   editStudent = (oldName: string, newName: string, group) => {
 
   };
-};
+}
 
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = dispatch => ({
+  openWarningModal: (modalInfo) => dispatch(showWarningModal(modalInfo)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(StudentsPage);

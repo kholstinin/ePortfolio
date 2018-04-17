@@ -25,7 +25,8 @@ const SPageContent = styled.div`
 const modalStyles = {
   content: {
     width: '700px',
-    margin: '0 auto',
+    height: '430px',
+    margin: '200px auto 0',
   },
 };
 
@@ -37,6 +38,7 @@ export default class WorkDemandsPage extends React.Component {
     this.state = {
       disciplineModalVisible: false,
       allDisciplines: [],
+      disciplineInput: '',
       selectedDisciplineName: {
         fullName: '',
         shortName: '',
@@ -49,7 +51,7 @@ export default class WorkDemandsPage extends React.Component {
   }
 
   render() {
-    const {allDisciplines} = this.state;
+    const {allDisciplines, disciplineInput} = this.state;
 
     return (
         <PageWrapper>
@@ -68,8 +70,11 @@ export default class WorkDemandsPage extends React.Component {
           <PageContent noPadding>
             <SPageContent>
               <DisciplineList
+                  disciplineInput={disciplineInput}
+                  onInputChange={(disciplineInput) => this.setState(
+                      {disciplineInput})}
                   selectedDisciplineName={this.state.selectedDisciplineName}
-                  disciplines={allDisciplines}
+                  disciplines={this.filterDisciplines(allDisciplines)}
                   addDiscipline={this.openDisciplineModal}
                   setSelectedDiscipline={this.setSelectedDiscipline}
               />
@@ -82,6 +87,25 @@ export default class WorkDemandsPage extends React.Component {
           </PageContent>
         </PageWrapper>
     );
+  }
+
+  filterDisciplines(allDisciplines) {
+    const {disciplineInput} = this.state;
+
+    const findDiscipline = (discipline, disciplineInput) => {
+      const shortNameInclude = discipline.shortName.toLowerCase().
+          includes(disciplineInput.toLowerCase());
+      const fullNameInclude = discipline.fullName.toLowerCase().
+          includes(disciplineInput.toLowerCase());
+      return shortNameInclude || fullNameInclude;
+    };
+
+    if (disciplineInput !== '') {
+      return allDisciplines.filter(
+          discipline => findDiscipline(discipline, disciplineInput));
+    }
+
+    return allDisciplines;
   }
 
   setSelectedDiscipline = (fullName: string, shortName: string) => {

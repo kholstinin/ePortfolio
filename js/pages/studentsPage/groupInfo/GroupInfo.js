@@ -61,9 +61,9 @@ export default class GroupInfo extends React.Component<TGroupInfoProps, {}> {
           {students ? <div>
             <SColumn>
               <SColumnHeader>Информация о группе:</SColumnHeader>
-              <SRow>Профиль {group.profile}</SRow>
-              <SRow>Направление {group.direction}</SRow>
-              <SRow>Отделение {printStudyType(group.studyType)} <span
+              <SRow>Профиль: {group.profile}</SRow>
+              <SRow>Направление: {group.direction}</SRow>
+              <SRow>Отделение: {printStudyType(group.studyType)} <span
                   onClick={() => this.props.changeField('type',
                       'Очное')}>Изменить</span></SRow>
             </SColumn>

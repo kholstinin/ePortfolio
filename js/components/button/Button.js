@@ -34,13 +34,13 @@ const SButton = styled.button`
   
   
   cursor: pointer;
-  background-color: #2bbbad;
+  background-color: ${btnPrimaryColor};
   position: relative;
   overflow: hidden;
   text-align: center;
   height: ${buttonHeight}px;
   line-height: ${buttonHeight}px;
-  background-color: ${props => getBtnColor(props.color)}
+  background-color: ${props => getBtnColor(props.color)};
   color: #fff;
   padding: 0 1rem;
   box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14),0 1px 7px 0 rgba(0,0,0,0.12),0 3px 1px -1px rgba(0,0,0,0.2);

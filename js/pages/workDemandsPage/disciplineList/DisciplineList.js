@@ -5,6 +5,7 @@ import {
   SDisciplineListWrapper,
   SDisciplineList,
   SDisciplineListItem,
+  SDisciplineListInputClear,
   SDisciplineListHeader,
   SDisciplineListInputWrapper,
   SDisciplineListInput,
@@ -19,7 +20,11 @@ export default class DisciplineList extends React.Component {
         <SDisciplineListWrapper>
           <SDisciplineListHeader>Список дисциплин</SDisciplineListHeader>
           <SDisciplineListInputWrapper>
-            <SDisciplineListInput/>
+            <SDisciplineListInput value={this.props.disciplineInput}
+                                  onChange={(e) => this.props.onInputChange(
+                                      e.target.value)}/>
+            <SDisciplineListInputClear
+              onClick={() => this.props.onInputChange('')}/>
           </SDisciplineListInputWrapper>
           <SDisciplineList>
             {disciplines && disciplines.map((discipline, index) =>

@@ -5,14 +5,16 @@ export const SModalHeader = styled.div`
   width: 100%;
   height: ${modalHeaderHeight}px;
   line-height: ${modalHeaderHeight}px;
-  font-size: 15px;
+  font-size: 20px;
   text-align: center;
   margin: 10px 0;
 `;
 
 export const SInputArea = styled.textarea`
   width: 100%;
-  height: 300px;
+  resize: none;
+  height: 400px;
+  margin-bottom: 20px;
 `;
 
 export const SColumn = styled.div`
@@ -29,4 +31,11 @@ export const SRow = styled.div`
 export const SLabel = styled.div`
   width: 150px;
   margin-right: 5px;
+`;
+
+export const SButtonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;    
 `;

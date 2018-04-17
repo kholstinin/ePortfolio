@@ -5,7 +5,7 @@ export const SModalHeader = styled.div`
   width: 100%;
   height: ${modalHeaderHeight}px;
   line-height: ${modalHeaderHeight}px;
-  font-size: 15px;
+  font-size: 20px;
   text-align: center;
   margin: 10px 0;
 `;
@@ -28,4 +28,12 @@ export const SLabel = styled.div`
 
 export const SSelectInputWrapper = styled.div`
   width: 100px;
+`;
+
+export const SButtonWrapper = styled.div`
+  width: 100%;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;    
 `;

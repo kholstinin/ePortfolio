@@ -5,12 +5,13 @@ import {
   LOADING_BEGIN,
   LOADING_END,
   SET_PORTFOLIO,
-  CLEAR_WORKS, ADD_REFERENCE,
+  CLEAR_WORKS, ADD_REFERENCE, HIDE_WARNING_MODAL, SHOW_WARNING_MODAL,
 } from './actionTypes';
 
 import initialisePortfolio from '../common/initialisePortfolio';
 import Portfolio from '../common/classes/portfolio';
 import {storage_portfolioKey} from '../common/global';
+import type {TWarningModalInfo} from './warningModalReducer';
 
 const dirTree = require('directory-tree');
 
@@ -100,3 +101,15 @@ export function addReference(discipline) {
   }
 }
 
+export function hideWarningModal() {
+  return {
+    type: HIDE_WARNING_MODAL,
+  }
+}
+
+export function showWarningModal(modalInfo: TWarningModalInfo) {
+  return {
+    type: SHOW_WARNING_MODAL,
+    info: modalInfo
+  }
+}

@@ -17,7 +17,10 @@ import {
 
 type TWrapperProps = {
   loading: boolean,
+
   warningModalVisible: boolean,
+  onConfirmClose: () => void,
+
   beginLoading: () => void,
   endLoading: () => void,
   updatePortfolio: () => void,
@@ -29,16 +32,10 @@ class Wrapper extends React.Component<TWrapperProps, {}> {
   }
 
   render() {
-    const {warningModalInfo} = this.props;
 
     return (
         <Container>
-          <WarningModal
-            confirmActionText={warningModalInfo.confirmActionText}
-            closeModal={() => {}}
-            visible={this.props.warningModalVisible}
-            warningText={warningModalInfo.warningText}
-          />
+          <WarningModal />
           <Loader loaded={!this.props.loading}
                   color='#5c6bc0'
                   length={0}
@@ -56,8 +53,6 @@ class Wrapper extends React.Component<TWrapperProps, {}> {
 
 const mapStateToProps = state => ({
   loading: state.loading.status,
-  warningModalVisible: state.warningModal.visible,
-  warningModalInfo: state.warningModal.info,
 });
 
 const mapDispatchToProps = dispatch => ({

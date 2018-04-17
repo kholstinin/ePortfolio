@@ -35,7 +35,7 @@ export default class GroupInfo extends React.Component {
                       (work, index) => <span key={index}>{work}
                         {index === discipline.workNumbers.length - 1 ?
                             null :
-                            ', '}
+                            ' / '}
                       </span>)}
                   </SDisciplineListItem>)}
             </SDisciplineList>

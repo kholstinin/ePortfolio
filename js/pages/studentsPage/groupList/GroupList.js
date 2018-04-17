@@ -9,6 +9,7 @@ import {
   SGroupListInputWrapper,
   SGroupListInput,
   SGroupButton,
+  SGroupListInputClearIcon,
 } from './styles';
 
 export default class GroupList extends React.Component {
@@ -18,7 +19,11 @@ export default class GroupList extends React.Component {
         <SGroupListWrapper>
           <SGroupListHeader>Список групп</SGroupListHeader>
           <SGroupListInputWrapper>
-            <SGroupListInput/>
+            <SGroupListInput
+                value={this.props.groupInput}
+                onChange={(e) => this.props.onInputChange(e.target.value)}/>
+            <SGroupListInputClearIcon
+                onClick={() => this.props.onInputChange('')}/>
           </SGroupListInputWrapper>
           <SGroupList>
             {this.props.studentsByGroup.map((group, index) =>
