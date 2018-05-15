@@ -7,9 +7,24 @@ import {
 
 import {btnDangerColor, btnSuccessColor} from '../../../common/palette';
 
+export const SColumnHeader = styled.div`
+  margin-bottom: 10px;
+`;
+
+export const SColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const SRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 export const SStudentsTableWrapper = styled.div`
   height: 400px;
   overflow-y: auto;
+  margin: 15px 0;
 `;
 
 export const SGroupInfoWrapper = TablePageContent.extend`
@@ -44,4 +59,9 @@ export const SFooterActions = styled.div`
   & > * {
   margin-right: 20px;
   }
+`;
+
+export const SIconWrapper = styled.div`
+  cursor: pointer;
+  margin-left: 5px;
 `;

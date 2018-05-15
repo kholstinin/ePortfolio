@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Loader from 'react-loader';
 
 import WarningModal from '../../components/modals/warningModal/WarningModal';
+import EditModal from '../../components/modals/editModal/EditModal';
 import RouterPage from '../RouterPage';
 import Menu from '../../components/menu/Menu';
 
@@ -12,8 +13,8 @@ import {
   SPage,
 } from './styles';
 import {
-  updatePortfolio,
-} from '../../reducers/actions';
+  fullUpdatePortfolio,
+} from '../../redux/actions/actions';
 
 type TWrapperProps = {
   loading: boolean,
@@ -28,7 +29,7 @@ type TWrapperProps = {
 
 class Wrapper extends React.Component<TWrapperProps, {}> {
   componentDidMount() {
-    this.props.updatePortfolio();
+    this.props.fullUpdatePortfolio();
   }
 
   render() {
@@ -36,6 +37,7 @@ class Wrapper extends React.Component<TWrapperProps, {}> {
     return (
         <Container>
           <WarningModal />
+          <EditModal />
           <Loader loaded={!this.props.loading}
                   color='#5c6bc0'
                   length={0}
@@ -56,7 +58,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updatePortfolio: () => dispatch(updatePortfolio()),
+  fullUpdatePortfolio: () => dispatch(fullUpdatePortfolio()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wrapper);

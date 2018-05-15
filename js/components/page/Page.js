@@ -44,7 +44,22 @@ export class PageHeader extends React.Component {
   }
 }
 
-export const SContent = styled.div`
+export const SContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+`;
+
+export class Container extends React.Component {
+  render() {
+    return (
+        <SContainer>{this.props.children}</SContainer>
+    );
+  }
+}
+
+export const SPageWrapper = styled.div`
   position: relative;
   width: 100%;
   height: ${contentHeight}px;
@@ -52,27 +67,29 @@ export const SContent = styled.div`
   padding: 0 ${props => props.noPadding ? 0 : 30}px;
 `;
 
-export class PageContent extends React.Component {
-  render() {
-    return (
-        <SContent noPadding={this.props.noPadding}>{this.props.children}</SContent>
-    );
-  }
-}
-
-export const SWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  font-size: 18px;
-`;
-
 export class PageWrapper extends React.Component {
   render() {
     return (
-        <SWrapper>{this.props.children}</SWrapper>
+        <SPageWrapper noPadding={this.props.noPadding}>{this.props.children}</SPageWrapper>
     );
   }
 }
 
+export const SPageContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 660px;
+`;
 
+export const SPageControls = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  padding: 0 ${props => props.padding ? props.padding + 'px' : 0}
+    
+  & > * {
+    margin-right: 15px;
+  }
+`;

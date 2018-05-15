@@ -1,22 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import {getStudentName, printStudyType} from '../../../common/utils';
-
-const SColumnHeader = styled.div`
-  margin-bottom: 10px;
-`;
-
-const SColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const SRow = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
+import Button from '../../../components/button/Button';
 import {
   STable,
   STableHeader,
@@ -24,7 +9,8 @@ import {
   STableCell,
   STableRow,
 } from '../../../components/table/TableStyles';
-import Button from '../../../components/button/Button';
+
+import {getStudentName, printStudyType} from '../../../common/utils';
 
 import {
   SGroupInfoWrapper,
@@ -34,10 +20,19 @@ import {
   SActionsWrapper,
   SStudentsTableRow,
   SFooterActions,
+  SColumnHeader,
+  SColumn,
+  SRow,
+  SIconWrapper,
 } from './styles';
 
+import type {TGroupInfo} from '../../../typings/Group';
+import type {TStudentFullName} from '../../../typings/StudentFullName';
+import {mainColor} from '../../../common/palette';
+
 type TGroupInfoProps = {
-  group: any,
+  group: TGroupInfo,
+  editGroup: () => {},
 }
 
 export default class GroupInfo extends React.Component<TGroupInfoProps, {}> {
@@ -45,7 +40,22 @@ export default class GroupInfo extends React.Component<TGroupInfoProps, {}> {
     super(props);
     this.state = {
       editedStudent: '',
-    }
+    };
+  }
+
+  renderField(fieldName: string, fieldLabel: string, fieldValue: string) {
+    return (
+        <SRow>
+          {fieldLabel}: {fieldValue}
+          <SIconWrapper onClick={() => this.props.showEditModal(fieldName)}>
+            <FontAwesomeIcon
+                icon='pencil-alt'
+                transform={{size: 14}}
+                color={mainColor}
+            />
+          </SIconWrapper>
+        </SRow>
+    );
   }
 
   render() {
@@ -54,18 +64,18 @@ export default class GroupInfo extends React.Component<TGroupInfoProps, {}> {
       return <SGroupInfoWrapper/>;
     }
 
-    const students = group.students;
+    const students = group.students.sort(
+        (student1, student2) => student1.surname > student2.surname);
 
     return (
         <SGroupInfoWrapper>
           {students ? <div>
             <SColumn>
               <SColumnHeader>Информация о группе:</SColumnHeader>
-              <SRow>Профиль: {group.profile}</SRow>
-              <SRow>Направление: {group.direction}</SRow>
-              <SRow>Отделение: {printStudyType(group.studyType)} <span
-                  onClick={() => this.props.changeField('type',
-                      'Очное')}>Изменить</span></SRow>
+              {this.renderField('profile', 'Профиль', group.profile)}
+              {this.renderField('direction', 'Направление', group.direction)}
+              {this.renderField('studyType', 'Отделение',
+                  printStudyType(group.studyType))}
             </SColumn>
             <SStudentsTableWrapper>
               <STable>
@@ -84,11 +94,10 @@ export default class GroupInfo extends React.Component<TGroupInfoProps, {}> {
             </SStudentsTableWrapper>
             <SFooterActions>
               <Button color='success'
-                      onClick={() => this.props.addStudent(
-                  'Никитин Андрей Акакевич')}
+                      onClick={this.props.addStudent}
                       text='Добавить студента'/>
               <Button color='danger'
-                      onClick={() => this.props.removeGroup()}
+                      onClick={this.props.removeGroup}
                       text='Удалить группу'/>
             </SFooterActions>
           </div> : null}
@@ -109,12 +118,12 @@ export default class GroupInfo extends React.Component<TGroupInfoProps, {}> {
     );
   }
 
-  renderActions(student) {
+  renderActions(student: TStudentFullName) {
     return (
         <STableCell key={999}>
           <SActionsWrapper>
             <SEditButton
-                onClick={() => this.editStudent()}>
+                onClick={() => this.props.editStudent(student)}>
               Изменить
             </SEditButton>
             <SRemoveButton
@@ -124,14 +133,5 @@ export default class GroupInfo extends React.Component<TGroupInfoProps, {}> {
           </SActionsWrapper>
         </STableCell>
     );
-  }
-
-  editInfo(infoType: string, newInfo: string) {
-
-  }
-
-  editStudent() {
-
-    this.props.editStudent();
   }
 }

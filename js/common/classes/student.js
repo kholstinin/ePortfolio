@@ -2,8 +2,8 @@ import Discipline from './discipline';
 import {getNameWithInitials} from '../nameSplit';
 import {getStudentId} from '../getId';
 
-import store from '../../reducers/store';
-import {addWrongWork} from '../../reducers/actions';
+import store from '../../redux/store';
+import {addWrongWork} from '../../redux/actions/actions';
 
 import {portfDB} from '../databases';
 import type {TStudentFullName} from '../../typings/StudentFullName';
@@ -19,6 +19,8 @@ export default class Student {
 
   _disciplineTree = [];
   _allStudents = [];
+  numberOfWorks = 0;
+  numberOfVerifiedWorks = 0;
 
   constructor(
       tree: dirTree, groupName: string, allStudents: Array<TStudentFullName>,
@@ -54,11 +56,20 @@ export default class Student {
                 this.fullName,
                 portfolioStatus, this.studyType),
         );
+
       });
     } else {
       this.err = 'Нет такого студента';
       store.dispatch(addWrongWork(this));
     }
+  }
+
+  countWorks() {
+    this.disciplines.forEach(discipline => {
+      discipline.countWorks();
+      this.numberOfWorks += discipline.numberOfWorks;
+      this.numberOfVerifiedWorks += discipline.numberOfVerifiedWorks;
+    });
   }
 
   _validateStudentName(): boolean {

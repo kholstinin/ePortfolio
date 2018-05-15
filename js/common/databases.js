@@ -25,9 +25,10 @@ const remoteDiscDB = new PouchDB(studDBurl, {
 });
 
 export const studDB = new PouchDB('students');
-studDB.sync(remoteStudDB);
+//studDB.sync(remoteStudDB);
 
 export const portfDB = new PouchDB('portfolio');
 //portfDB.sync(remotePortfDB);
 
 export const discDB = new PouchDB('demandWorks');
+//discDB.sync(remoteDiscDB);

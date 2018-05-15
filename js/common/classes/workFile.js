@@ -1,47 +1,71 @@
+import type {TStudentFullName} from '../../typings/StudentFullName';
+
 import {
   getFileNameFromInfo,
   getWorkTypeAbbr,
   getInfoFromFileName,
 } from '../nameSplit';
 
-import store from '../../reducers/store';
-import {addUnverifiedWork, addWrongWork} from '../../reducers/actions';
-import type {TStudentFullName} from '../../typings/StudentFullName';
+const fs = require('fs');
+
+import store from '../../redux/store';
+import {addUnverifiedWork, addWrongWork} from '../../redux/actions/actions';
 
 export default class WorkFile {
-  name: '';
+  workNumber = '';
+  workType = '';
+  disciplineName = '';
+  disciplineFullName = '';
+
+  name = '';
+
   studentFullName: '';
   groupName = '';
   path = '';
   expectedFileName = '';
   extension = '';
   verified = false;
-  err: string;
+  wrong = false;
 
   constructor(
       file: dirTree, groupName: string, studentFullName: TStudentFullName,
-      disciplineName: string, workType: string,
+      disciplineName: string, disciplineFullName: string, workType: string,
       workTypePortfolioStatus) {
     this.name = file.name;
+    this.disciplineName = disciplineName;
+    this.disciplineFullName = disciplineFullName;
     this.groupName = groupName;
     this.extension = file.extension;
     this.path = file.path;
     this.studentFullName = studentFullName;
 
-    const number = getInfoFromFileName(file.name).workNumber;
+    const fileInfo = getInfoFromFileName(file.name);
+    const number = fileInfo.workNumber;
+    this.workNumber = number;
+    this.workType = fileInfo.workType;
+
     const workTypeAbbr = getWorkTypeAbbr(workType);
     this.expectedFileName = getFileNameFromInfo(groupName, studentFullName,
         disciplineName, workTypeAbbr, number);
 
     if (this._validateWorkFile()) {
-      //console.log(workTypePortfolioStatus);
+      let workStatus = {};
 
       if (workTypePortfolioStatus && workTypePortfolioStatus[number]) {
-        this.verified = workTypePortfolioStatus[number].status;
+        workStatus = workTypePortfolioStatus[number];
       }
 
-      if (!this.verified) {
+      if (workStatus.status === false) {
+        const currentModificationLastTime = fs.statSync(this.path).mtime.toString();
+        if (currentModificationLastTime === workStatus.lastModified) {
+          this.wrong = true;
+        } else {
+          store.dispatch(addUnverifiedWork(this));
+        }
+      } else if (workStatus.status === undefined) {
         store.dispatch(addUnverifiedWork(this));
+      } else {
+        this.verified = true;
       }
 
     } else {

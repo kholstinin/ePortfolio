@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 const {shell} = require('electron');
 
-import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
+import {Container, PageHeader, PageWrapper} from '../../components/page/Page';
 
 import {
   STable,
@@ -19,9 +19,9 @@ class ErrorPage extends React.Component {
     const {works} = this.props;
 
     return (
-        <PageWrapper>
+        <Container>
           <PageHeader text='Портфолио с ошибками'/>
-          <PageContent>
+          <PageWrapper>
             <StableWrapper>
               <STable>
                 {this.renderHeader()}
@@ -43,8 +43,8 @@ class ErrorPage extends React.Component {
                 </STableBody>
               </STable>
             </StableWrapper>
-          </PageContent>
-        </PageWrapper>
+          </PageWrapper>
+        </Container>
     );
   }
 

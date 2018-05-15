@@ -1,70 +1,28 @@
+import type {TStatusPageProps,TStatusPageState} from './typings';
+import type {TStudentPortfolio} from '../../typings/Portfolio';
+
 import React from 'react';
-import styled from 'styled-components';
 import {portfDB} from '../../common/databases';
 
-import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
-import {compareStudents, getDocs} from '../../common/utils';
+import Button from '../../components/button/Button';
+import {
+  Container,
+  PageWrapper,
+  PageHeader,
+  SPageControls,
+} from '../../components/page/Page';
+import {
+  SColumnHeader,
+  SGroupColumn,
+  SStudentsColumn,
+  SDisciplinesColumn,
+  SWorksColumn,
+  SColumnItem,
+  SRow,
+} from './styles';
 
-import type {TStudentPortfolio} from '../../typings/Portfolio';
-import type {TStudentFullName} from '../../typings/StudentFullName';
-import portfolio from '../../reducers/portfolioReducer';
+import {getDocs} from '../../common/utils';
 import {getNameWithInitials} from '../../common/nameSplit';
-
-const SActionHeader = styled.div`
-  width: 100%;
-  height: 80px;
-`;
-
-const SColumn = styled.div`
-  display: flex;
-  text-align: center;
-  flex-direction: column;
-  height: 100%;
-  overflow-y: scroll;
-`;
-
-const SColumnHeader = styled.div`
-  margin-bottom: 15px;
-`;
-
-const SGroupColumn = SColumn.extend`
-  width: 200px;
-`;
-
-const SStudentsColumn = SColumn.extend`
-  width: 300px;
-`;
-
-const SDisciplinesColumn = SColumn.extend`
-  width: 300px;
-`;
-
-const SWorksColumn = SColumn.extend`
-  width: 100%;
-  border-right: none;
-`;
-
-const SColumnItem = styled.div`
-  margin-bottom: 5px;
-  cursor: pointer;
-`;
-
-const SRow = styled.div`
-  display: flex;
-  width: 100%;
-  height: 650px;
-  flex-direction: row;
-`;
-
-type TStatusPageProps = {}
-
-type TStatusPageState = {
-  portfolio: Array<TStudentPortfolio>,
-  groups: Array<string>,
-  activeGroup: string,
-  activeStudent: TStudentPortfolio,
-  activeDiscipline: string,
-}
 
 export default class StatusPage extends React.Component<TStatusPageProps, TStatusPageState> {
   constructor(props) {
@@ -91,16 +49,19 @@ export default class StatusPage extends React.Component<TStatusPageProps, TStatu
   }
 
   render() {
-    const {portfolio, groups, activeGroupName, activeDiscipline} = this.state;
-    console.log(portfolio);
+    const {groups, activeGroupName} = this.state;
 
     const activeGroup = groups.find(
         group => group.groupName === activeGroupName);
 
-    return <PageWrapper>
+    return <Container>
       <PageHeader text='Статус портфолио'/>
-      <PageContent>
-        <SActionHeader/>
+      <PageWrapper>
+        <SPageControls>
+          <Button text='Очистить фильтры'
+                  onClick={this.clearFilters}
+          />
+        </SPageControls>
         <SRow>
           <SGroupColumn>
             <SColumnHeader>Группы</SColumnHeader>
@@ -108,14 +69,21 @@ export default class StatusPage extends React.Component<TStatusPageProps, TStatu
             groups.map(
                 (item, index) => <SColumnItem
                     onClick={() => this.setState(
-                        {activeGroupName: item.groupName})}
+                        {
+                          activeGroupName: item.groupName,
+                          activeStudent: {},
+                          activeDiscipline: {},
+                        })}
                     key={index}>{item.groupName}</SColumnItem>)}
           </SGroupColumn>
           <SStudentsColumn>
             <SColumnHeader>Студенты</SColumnHeader>
             {activeGroup && activeGroup.students.map(
                 (student, index) => <SColumnItem
-                    onClick={() => this.setState({activeStudent: student})}
+                    onClick={() => this.setState({
+                      activeStudent: student,
+                      activeDiscipline: {},
+                    })}
                     key={index}>{getNameWithInitials(
                     student.name)}</SColumnItem>)}
           </SStudentsColumn>
@@ -128,8 +96,8 @@ export default class StatusPage extends React.Component<TStatusPageProps, TStatu
             {this.renderWorks()}
           </SWorksColumn>
         </SRow>
-      </PageContent>
-    </PageWrapper>;
+      </PageWrapper>
+    </Container>;
   }
 
   renderWorks() {
@@ -163,8 +131,6 @@ export default class StatusPage extends React.Component<TStatusPageProps, TStatu
         arrOfWorks.push(workNumber);
       }
     }
-
-    console.log(arrOfWorks);
 
     return {
       workType,

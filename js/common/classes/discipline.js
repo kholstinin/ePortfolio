@@ -2,8 +2,8 @@ import Work from './work';
 import {discDB, portfDB} from '../../common/databases';
 import {getDisciplineId} from '../getId';
 
-import store from '../../reducers/store';
-import {addReference, addWrongWork} from '../../reducers/actions';
+import store from '../../redux/store';
+import {addReference, addWrongWork} from '../../redux/actions/actions';
 
 import {TStudentPortfolio} from '../../typings/Portfolio';
 import {TStudyType} from '../../typings/Common';
@@ -23,6 +23,9 @@ export default class Discipline {
   works = [];
   isDone = false;
 
+  numberOfWorks = 0;
+  numberOfVerifiedWorks = 0;
+
   constructor(
       tree: dirTree, groupName: string, studentFullName: string,
       portfolioStatus: TStudentPortfolio, studyType: TStudyType) {
@@ -38,7 +41,7 @@ export default class Discipline {
 
   initialiseDiscipline() {
     const id = getDisciplineId(this.fullName, this.studyType);
-    discDB.get(id).then(discipline => {
+    return discDB.get(id).then(discipline => {
       const needWorks = discipline.works;
       this.name = discipline.shortName;
 
@@ -67,14 +70,25 @@ export default class Discipline {
       this.works = this._tree.map(
           work => new Work(work, this.groupName, this.studentFullName,
               this.name,
+              this.fullName,
               needWorks,
               disciplinePortfolioStatus));
+
     }).catch(err => {
-      console.log(err);
       if (err.name === 'not_found') {
         this.err = 'Такой дисциплины не существует';
         store.dispatch(addWrongWork(this));
+      } else {
+        console.log(err);
       }
+    });
+  }
+
+  countWorks() {
+    this.works.forEach(work => {
+      work.countWorks();
+      this.numberOfWorks += work.numberOfWorks;
+      this.numberOfVerifiedWorks += work.numberOfVerifiedWorks;
     });
   }
 }

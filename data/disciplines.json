@@ -1,20 +1,22 @@
 {
-  "_id": "fulltime_OOP",
+  "_id": "fulltime_obektno_orientirovannoe_programmirovanie",
   "disciplineFullName": "Объектно-ориентированное программирование",
   "disciplineName": "ООП",
   "type": "fulltime",
+  "professor": "Обвинцев Олег Александрович",
   "works": [
     {
       "type": "Лабораторные работы",
-      "workNumbers": "[1, 2, 3, 4, 5, 6]"
-    },
-    {
-      "type": "Практические работы",
-      "workNumbers": "[1, 2, 3]"
+      "workNumbers": "[1, 2]"
     },
     {
       "type": "Курсовая работа",
-      "workNumbers": 1
+      "workNumbers": {
+        "1": true
+      }
+    },
+    {
+      "type": "Курсовой проект"
     },
     {
       "type": "Самостоятельные работы",

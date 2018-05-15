@@ -3,18 +3,9 @@ import {connect} from 'react-redux';
 import styled from 'styled-components';
 
 import Button from '../../button/Button';
-import Modal from '../../modal/Modal';
-import {hideWarningModal} from '../../../reducers/actions';
-import type {TWarningModalInfo} from '../../../reducers/warningModalReducer';
-
-const modalStyle = {
-  content: {
-    top: '30%',
-    margin: '0 auto',
-    width: '400px',
-    height: '170px',
-  },
-};
+import ModalTemplate from '../../modalTemplate/ModalTemplate';
+import {hideWarningModal} from '../../../redux/actions/actions';
+import type {TWarningModalInfo} from '../../../redux/reducers/warningModalReducer';
 
 const SWarningModalTitle = styled.div`
   width: 100%;
@@ -56,11 +47,10 @@ class WarningModal extends React.Component<TWarningModalProps, {}> {
     const {warningModalInfo, visible} = this.props;
 
     return (
-        <Modal
+        <ModalTemplate
             modalVisible={visible}
             title='Предупреждение'
-            styles={modalStyle}
-            onRequestClose={warningModalInfo.onClose}
+            onRequestClose={this.props.closeWarningModal}
         >
           <div>
             <SWarningModalTitle>Предупреждение</SWarningModalTitle>
@@ -72,7 +62,7 @@ class WarningModal extends React.Component<TWarningModalProps, {}> {
                       onClick={this.props.closeWarningModal}/>
             </SButtonsWrapper>
           </div>
-        </Modal>
+        </ModalTemplate>
     );
   }
 

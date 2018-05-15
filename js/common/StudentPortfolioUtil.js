@@ -7,6 +7,7 @@ export default class StudentPortfolioUtil {
 
   addWork(
       disciplineName: string,
+      disciplineFullName: string,
       workType: string,
       workNumber: string,
       workStatus: TWorkStatus,
@@ -30,8 +31,9 @@ export default class StudentPortfolioUtil {
 
       }
     } else {
-      arrDisciplinePortfolio.push({
+      const newPortfolioDiscipline = {
         disciplineName,
+        disciplineFullName,
         works: [
           {
             workType,
@@ -40,7 +42,9 @@ export default class StudentPortfolioUtil {
         ],
         isDone: false,
         referencePrinted: false,
-      });
+      };
+
+      arrDisciplinePortfolio.push(newPortfolioDiscipline);
     }
   }
 

@@ -1,16 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import store from './reducers/store';
+import store from './redux/store';
 
 const storage = require('electron-json-storage');
 import {injectGlobal} from 'styled-components';
-//PouchDB.plugin(require('pouchdb-find'));
 
 import fontawesome from '@fortawesome/fontawesome'
 import faSync from '@fortawesome/fontawesome-free-solid/faSync';
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
+import faTimesCircle from '@fortawesome/fontawesome-free-solid/faTimesCircle';
+import angleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
+import angleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft';
+import pencil from '@fortawesome/fontawesome-free-solid/faPencilAlt';
 
-fontawesome.library.add(faSync);
+fontawesome.library.add(faSync, faTimes, faTimesCircle, angleRight, angleLeft, pencil);
 
 import App from './pages/App/App';
 

@@ -25,20 +25,26 @@ export const SWorkTableRow = styled.div`
 
 export const SWorkTableHeader = styled.div`
   display: table-header-group;
-  cursor: default;
   
   &:hover ${SWorkTableRow}{
+    cursor: default;
     background-color: transparent ;
   }
 `;
 
 export const SWorkTableCell = styled.div`
   display: table-cell;
+  text-align: center;
   padding: 5px;
   border-bottom: 1px solid #000;
 `;
 
-export const SControls = styled.div`
-  width: 100%;
-  height: 80px;
+export const STableHeaderInput = styled.input`
+  margin: 5px auto 0;
+  width: 80%;
+`;
+
+export const SWorkTableHeaderAction = styled.div`
+  display: flex;
+  flex-direction: column;    
 `;

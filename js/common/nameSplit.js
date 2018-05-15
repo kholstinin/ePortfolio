@@ -13,7 +13,9 @@ function convertWorkAbbr(workAbbr: string) {
   const works = {
     'ПР': 'Практические работы',
     'ЛР': 'Лабораторные работы',
-    'КР': 'Курсовые работы',
+    'КР': 'Курсовая работа',
+    'КП': 'Курсовой проект',
+    'ДКР': 'Домашние контрольные работы',
     'СР': 'Самостоятельные работы',
   };
 
@@ -30,7 +32,11 @@ export function getInfoFromFileName(fileName: string): fileInfo {
   const workName = arrOfInfo[3].split('.')[0];
 
   const workType = convertWorkAbbr(workName[0] + workName[1]);
-  const workNumber = workName.substring(2);
+  let workNumber = '';
+
+  if (workType !== 'КР' && workType !== 'КП') {
+    workNumber = workName.substring(2);
+  }
 
   return {
     group: arrOfInfo[0],
@@ -53,11 +59,11 @@ function splitName(fullName: string): TStudentFullName {
   return {
     name: splitName[1],
     surname: splitName[0],
-    patronymic: splitName[2]
-  }
+    patronymic: splitName[2],
+  };
 }
 
-export function getNameWithInitials(fullName: {} | string): string {
+export function getNameWithInitials(fullName: TStudentFullName | string): string {
   let fullNameObj;
 
   if (typeof fullName === 'string') {
@@ -71,6 +77,10 @@ export function getNameWithInitials(fullName: {} | string): string {
   const initials = `${fullNameObj.name[0]}${fullNameObj.patronymic[0]}`;
 
   return `${fullNameObj.surname} ${initials}`;
+}
+
+export function getStringFullName(fullName: TStudentFullName): string {
+  return `${fullName.surname} ${fullName.name} ${fullName.patronymic}`;
 }
 
 export function getWorkTypeAbbr(workType: string): string {

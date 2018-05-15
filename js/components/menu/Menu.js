@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {changeRoute, updatePortfolio} from '../../reducers/actions';
+import {changeRoute, fullUpdatePortfolio} from '../../redux/actions/actions';
 import {mainColor} from '../../common/palette';
 
 import MenuItem from './MenuItem';
@@ -8,7 +8,7 @@ import MenuItem from './MenuItem';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const menuItems = [
-  {name: 'Корневые каталоги', route: 'root'},
+  {name: 'Настройки', route: 'settings'},
   {name: 'Портфолио', route: 'portfolio'},
   {name: 'Ошибки', route: 'error'},
   {name: 'На проверку', route: 'review'},
@@ -34,7 +34,7 @@ class Menu extends React.Component<MenuProps, {}> {
     return (
         <SMenu>
           <SButtonsWrapper>
-            <SRefreshButton onClick={this.props.updatePortfolio}>
+            <SRefreshButton onClick={this.props.fullUpdatePortfolio}>
               <FontAwesomeIcon
                   icon="sync"
                   transform={{size: 25, x: 7, y: 7}}
@@ -63,7 +63,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setRoute: route => dispatch(changeRoute(route)),
-  updatePortfolio: () => dispatch(updatePortfolio()),
+  fullUpdatePortfolio: () => dispatch(fullUpdatePortfolio()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

@@ -80,7 +80,8 @@ export default class StudentsModal extends React.Component<TGroupModalProps, TGr
 
   serializeStudents = (): Array<TStudentFullName> => {
     const {students} = this.state;
-    const arrOfFullNames = students.split('\n');
+    let arrOfFullNames = students.split('\n');
+    arrOfFullNames = arrOfFullNames.filter(item => item !== '');
     let arrOfStudents = [];
 
     //TODO Добавить больше валидаций

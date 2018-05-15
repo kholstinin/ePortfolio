@@ -22,7 +22,7 @@ function getSeparator(str: string): string {
 
 export function splitStudent(studentFullName: string): TStudentFullName {
   const separator = getSeparator(studentFullName);
-  const splitName = studentFullName.split(separator);
+  const splitName = studentFullName.trim().split(separator);
 
   return {
     surname: splitName[0],
@@ -41,7 +41,9 @@ export function getDocs(arrOfDocs) {
 
 function getDisciplineType(discipline: string): TDisciplineType {
   const disciplinesTuple = {
-    'course': 'Курсовая работа',
+    'courseWork': 'Курсовая работа',
+    'homework': 'Домашние контрольные работы',
+    'courseProject': 'Курсовой проект',
     'practical': 'Практические работы',
     'independent': 'Самостоятельные работы',
     'laboratory': 'Лабораторные работы',
@@ -81,4 +83,25 @@ export function compareStudents(
 
 export function printStudyType(studyType: TStudyType): string {
   return studyTypes[studyType];
+}
+
+export function getSingleWorkType(pluralWorkType: string) {
+  const splitWorkType = pluralWorkType.split(' ');
+  const workType = splitWorkType[0];
+  return workType.slice(0, -2) + 'ая';
+}
+
+export function convertPluralWorkTypeToSingular(workType: string): string {
+  const workTypes = {
+    'Практические работы': 'Практическая работа',
+    'Лабораторные работы': 'Лабораторная работа',
+    'Самостоятельные работы': 'Самостоятельная работа',
+    'Домашние контрольные работы': 'Домашняя контрольная работа'
+  };
+
+  if (workTypes[workType]) {
+    return workTypes[workType];
+  }
+
+  return workType;
 }

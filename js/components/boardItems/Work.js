@@ -28,7 +28,7 @@ export default class WorkType extends React.Component {
 
     return <div>
       <WorkItem onClick={this.onWorkClick}>
-        {work.type}
+        {`${work.type} ${work.numberOfVerifiedWorks}/${work.numberOfWorks}`}
       </WorkItem>
       {this.state.expanded && WorkType.renderWorks(work.workFiles)}
     </div>;

@@ -7,7 +7,7 @@ const APP_DIR = path.resolve(__dirname, 'js');
 module.exports = {
   entry: {
     app: ['webpack/hot/dev-server', './js/entry.js'],
-    pdfView: './js/renderPdf/render',
+    pdfView: './js/renderPdf/entry.js',
   },
 
   output: {

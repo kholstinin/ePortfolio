@@ -6,17 +6,17 @@ const path = require('path');
 const url = require('url');
 
 
-import store from '../reducers/store';
-import {startLoading, updatePortfolio} from '../reducers/actions';
+import store from '../redux/store';
+import {updatePortfolio} from '../redux/actions/actions';
 
 export default function openWorks(
-    paths: Array<string>,
+    workFiles: Array<{path: string, disciplineFullName: string}>,
     studentsInfoArr: Array<{ fullName: TStudentFullName, groupName: string }>): void {
   const {height} = electron.screen.getPrimaryDisplay().workAreaSize;
   const heightOfWorkWindow = height;
   const widthOfControlPanel = 300;
   const windowPadding = 30;
-  const widthOfPdf = Math.floor(height / 1.42);
+  const widthOfPdf = Math.floor(height / 1.5);
   const widthOfWindow = widthOfPdf + widthOfControlPanel + windowPadding * 2;
 
   const parentWin = BrowserWindow.getFocusedWindow();
@@ -26,6 +26,7 @@ export default function openWorks(
         modal: true,
         width: widthOfWindow,
         height: heightOfWorkWindow,
+        title: 'Проверка работ',
       });
 
   win.loadURL(url.format({
@@ -37,7 +38,7 @@ export default function openWorks(
   contents.on('did-finish-load', () => {
     contents.send('mainChannel',
         {
-          paths, widthOfPdf, studentsInfoArr,
+          workFiles, widthOfPdf, studentsInfoArr,
         });
   });
   contents.on('destroyed', () => {

@@ -24,7 +24,9 @@ export default function initialisePortfolio(portfolio) {
       const students = group.students;
       students.forEach(student => {
         const disciplines = student.disciplines;
-        disciplines.forEach(discipline => disciplinePromises.push(discipline.initialiseDiscipline()));
+        disciplines.forEach(discipline => {
+          disciplinePromises.push(discipline.initialiseDiscipline())
+        });
       });
     });
 

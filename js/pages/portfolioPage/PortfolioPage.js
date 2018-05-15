@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import styled from 'styled-components';
 
 import Group from '../../components/boardItems/Group';
-import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
+import {Container, PageHeader, PageWrapper} from '../../components/page/Page';
 
 // const pathToRootDirectory = '/Портфолио';
 // const pathToGroup = pathToRootDirectory + '/ПЕ-41б';
@@ -11,17 +11,23 @@ import {PageWrapper, PageHeader, PageContent} from '../../components/page/Page';
 // const pathToDiscipline = pathToStudent + '/ООП';
 
 const ContentWrapper = styled.div`
-  padding-top: 80px;
+  padding-top: 15px;
+  height: 650px;
+  overflow-y: auto;
 `;
 
 class PortfolioPage extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     const {portfolio} = this.props;
 
     return (
-        <PageWrapper>
+        <Container>
           <PageHeader text='Портфолио'/>
-          <PageContent>
+          <PageWrapper>
             <ContentWrapper>
               {portfolio === 'empty' ?
                   'Не указан путь до портфолио' :
@@ -34,8 +40,8 @@ class PortfolioPage extends React.Component {
                       />) :
                   null}
             </ContentWrapper>
-          </PageContent>
-        </PageWrapper>
+          </PageWrapper>
+        </Container>
     );
   }
 }

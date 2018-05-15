@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../../../components/button/Button';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import {
   SGroupListWrapper,
@@ -8,9 +8,9 @@ import {
   SGroupListHeader,
   SGroupListInputWrapper,
   SGroupListInput,
-  SGroupButton,
   SGroupListInputClearIcon,
 } from './styles';
+import {mainColor} from '../../../common/palette';
 
 export default class GroupList extends React.Component {
   render() {
@@ -23,7 +23,13 @@ export default class GroupList extends React.Component {
                 value={this.props.groupInput}
                 onChange={(e) => this.props.onInputChange(e.target.value)}/>
             <SGroupListInputClearIcon
-                onClick={() => this.props.onInputChange('')}/>
+                onClick={() => this.props.onInputChange('')}>
+              <FontAwesomeIcon
+                  icon="times-circle"
+                  transform={{size: 15}}
+                  color={mainColor}
+              />
+            </SGroupListInputClearIcon>
           </SGroupListInputWrapper>
           <SGroupList>
             {this.props.studentsByGroup.map((group, index) =>
@@ -34,9 +40,6 @@ export default class GroupList extends React.Component {
                   {group.name}
                 </SGroupListItem>)}
           </SGroupList>
-          <SGroupButton>
-            <Button onClick={this.props.addGroup} text='Добавить группу'/>
-          </SGroupButton>
         </SGroupListWrapper>
     );
   }

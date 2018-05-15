@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import {connect} from 'react-redux';
 
 import PortfolioPage from '../pages/portfolioPage/PortfolioPage';
-import ChooseRootPage from '../pages/chooseRootPage/chooseRootPage';
+import SettingsPage from './settingsPage/settingsPage';
 import ErrorsPage from '../pages/erorrPage/errorPage';
 import ReviewsPage from '../pages/reviewPage/reviewPage';
 import StatusPage from '../pages/statusPage/statusPage';
 import ReferencePage from './referencePage/referencePage';
 import StudentsPage from '../pages/studentsPage/studentsPage';
-import WorkDemandsPage from './workDemandsPage/WorkDemandsPage';
+import DisciplinesPage from './disciplinesPage/DisciplinesPage';
 
 const Column = styled.div`
   width: 100%;
@@ -23,13 +23,13 @@ class RouterPage extends React.Component {
     return (
         <Column>
           {route === 'portfolio' && <PortfolioPage/>}
-          {route === 'root' && <ChooseRootPage/>}
+          {route === 'settings' && <SettingsPage/>}
           {route === 'error' && <ErrorsPage/>}
           {route === 'review' && <ReviewsPage/>}
           {route === 'status' && <StatusPage/>}
           {route === 'references' && <ReferencePage/>}
           {route === 'students' && <StudentsPage/>}
-          {route === 'demands' && <WorkDemandsPage/>}
+          {route === 'demands' && <DisciplinesPage/>}
         </Column>
     );
   }

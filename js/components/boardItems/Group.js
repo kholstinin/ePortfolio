@@ -7,6 +7,7 @@ import SBoardItem from './BoardItem';
 const GroupItem = SBoardItem.extend`
   margin-bottom: 5px;
   color: #000;
+  font-size: 20px;
 `;
 
 export default class Group extends React.Component {
@@ -28,7 +29,7 @@ export default class Group extends React.Component {
     return (
         <div>
           <GroupItem error={!!group.err} onClick={this.onGroupClick}>
-            {group.name}
+            {`${group.name} ${group.numberOfVerifiedWorks}/${group.numberOfWorks}`}
           </GroupItem>
           {this.state.expanded && Group.renderStudents(group.students)}
         </div>);

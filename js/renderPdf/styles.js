@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {dangerColor} from '../common/palette';
 
 export const PdfWrapper = styled.div`
   width: ${props => props.width || 732}px;
@@ -40,6 +41,7 @@ export const ButtonsWrapper = styled.div`
 export const MessageInput = styled.textarea.attrs({
   placeholder: 'Описание ошибки',
 })`
+  outline: ${props => props.err ? `1px solid ${dangerColor}` : 'none'};
   width: 100%;
   height: 60px;
   resize: none;
@@ -47,10 +49,11 @@ export const MessageInput = styled.textarea.attrs({
 
 const btnSize = 20;
 export const BtnBlock = styled.div`
+  display: flex
+  justify-content: center;
+  align-items: center;
   width: ${btnSize}px;
   height: ${btnSize}px;
-  background-color: #dedede;
-  border-radius: 5px;
   cursor: pointer;
   margin-bottom: 20px;
 `;
@@ -73,4 +76,10 @@ export const Title = styled.div`
   line-height: 50px;
   border-bottom: 1px solid #000;
   margin-bottom: 15px;
+`;
+
+export const SErrorBlock = styled.div`
+  font-size: 18px;
+  margin: 1em 0;
+  color: ${dangerColor};    
 `;

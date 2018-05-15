@@ -53,7 +53,6 @@ export const SGroupListInputClearIcon = styled.div`
   position: absolute;
   width: 20px;
   height: 20px;
-  background-color: #dedede;
   right: 5px;
   top: 1px;
   cursor: pointer;

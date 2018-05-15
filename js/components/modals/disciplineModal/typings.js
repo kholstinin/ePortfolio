@@ -2,7 +2,7 @@ import type {TDisciplineInfo} from '../../../typings/Discipline';
 import type {TStudyType} from '../../../typings/Common';
 
 export type TDisciplineModalProps = {
-  onAddClick: (TDisciplineInfo) => void,
+  clickAction: (TDisciplineInfo) => void,
   closeModal: () => void
 }
 
@@ -12,6 +12,6 @@ export type TDisciplineModalState = {
   type: TStudyType,
   practical: string,
   laboratory: string,
-  course: boolean,
+  courseWork: boolean,
   independent: string,
 }

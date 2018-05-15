@@ -24,8 +24,8 @@ export default class Student extends React.Component {
     }
 
     return <div>
-      <DisciplineItem isDone={discipline.isDone} onClick={this.onDisciplineClick}>
-        {discipline.name}
+      <DisciplineItem onClick={this.onDisciplineClick}>
+        {`${discipline.name} ${discipline.numberOfVerifiedWorks}/${discipline.numberOfWorks}`}
       </DisciplineItem>
       {this.state.expanded && Student.renderWorks(discipline.works)}
     </div>;

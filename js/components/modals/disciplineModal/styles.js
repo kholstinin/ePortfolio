@@ -35,5 +35,9 @@ export const SButtonWrapper = styled.div`
   margin-top: 30px;
   display: flex;
   flex-direction: row;
-  justify-content: center;    
+  justify-content: center;
+  
+  & > * {
+    margin-right: 15px;
+  }    
 `;
