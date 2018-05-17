@@ -22,6 +22,7 @@ export default class Discipline {
   studyType = '';
   works = [];
   isDone = false;
+  referencePrinted = false;
 
   numberOfWorks = 0;
   numberOfVerifiedWorks = 0;
@@ -63,6 +64,7 @@ export default class Discipline {
             store.dispatch(addReference(this));
           }
         } else {
+          this.referencePrinted = disciplinePortfolioStatus.referencePrinted;
           store.dispatch(addReference(this));
         }
       }

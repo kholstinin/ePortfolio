@@ -1,6 +1,6 @@
-import type {TWorkObj} from '../../typings/Common';
+import type {TWorkObj} from '../typings/Common';
 
-export default class Works {
+export default class DisciplineWorks {
   works: [];
 
   constructor(works: Array<TWorkObj>) {
@@ -16,6 +16,12 @@ export default class Works {
     return practicalWorks.workNumbers.join(' ');
   }
 
+  getPracticalWorksNumber(): string {
+    const practicalWorks = this._searchByWorkType('Практические работы');
+    console.log(practicalWorks);
+    return (practicalWorks && practicalWorks.workNumbers.length) || '-';
+  }
+
   getLaboratoryWorkNumbers(): string {
     const laboratoryWorks = this._searchByWorkType('Лабораторные работы');
     if (!laboratoryWorks) {
@@ -23,6 +29,11 @@ export default class Works {
     }
 
     return laboratoryWorks.workNumbers.join(' ');
+  }
+
+  getLaboratoryWorksNumber(): string {
+    const laboratoryWorks = this._searchByWorkType('Лабораторные работы');
+    return laboratoryWorks && laboratoryWorks.workNumbers.length || '-';
   }
 
   getIndependentWorkNumbers(): string {
@@ -34,6 +45,11 @@ export default class Works {
     return independentWorks.workNumbers.join(' ');
   }
 
+  getIndependentWorksNumber(): string {
+    const independentWorks = this._searchByWorkType('Самостоятельные работы');
+    return independentWorks && independentWorks.workNumbers.length || '-';
+  }
+
   getHomeworkNumbers(): string {
     const homeworks = this._searchByWorkType('Домашние контрольные работы');
     if (!homeworks) {
@@ -41,6 +57,11 @@ export default class Works {
     }
 
     return homeworks.workNumbers.join(' ');
+  }
+
+  getHomeworksNumber(): string {
+    const homeworks = this._searchByWorkType('Домашние контрольные работы');
+    return homeworks && homeworks.workNumbers.length || '-';
   }
 
   getCourseWork(): boolean {
@@ -51,7 +72,20 @@ export default class Works {
     return !!this._searchByWorkType('Курсовой проект');
   }
 
+  getAllWorksNumber(): number {
+    let worksNumber = 0;
+    this.works.forEach(work => {
+      worksNumber += work.workNumbers.length
+    });
+
+    return worksNumber;
+  }
+
   _searchByWorkType(workType: string): ?Array<string> {
     return this.works.find(work => work.type === workType);
+  }
+
+  static searchByWorkType(works: Array<TWorkObj>, workType: string): ?Array<string> {
+    return works.find(work => work.type === workType);
   }
 }

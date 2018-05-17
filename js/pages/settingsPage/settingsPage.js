@@ -1,32 +1,54 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
 const {shell} = require('electron');
 const storage = require('electron-json-storage');
 const {dialog} = require('electron').remote;
 
 import Button from '../../components/button/Button';
-import {Container, PageHeader, PageWrapper, SPageControls} from '../../components/page/Page';
+import {
+  Container,
+  PageHeader,
+  PageWrapper,
+  SPageControls,
+} from '../../components/page/Page';
 
-import {storage_portfolioKey} from '../../common/global';
+import {storage_portfolioKey, storage_masterNameKey} from '../../common/global';
 
 import {
   SRemoveBtn,
   SOpenBtn,
   SActionsWrapper,
   SPathsRow,
+  SSettingsHeader,
+  SPathsTable,
+  SChangeAction,
+  SMasterText,
 } from './styles';
 
 import {
-  STable,
   STableHeader,
   STableBody,
   STableRow,
   STableCell,
 } from '../../components/table/TableStyles';
+import EditFieldTemplate
+  from '../../components/modals/templates/editFieldTemplate';
+import {
+  hideModal,
+  showModal,
+} from '../../redux/actions/actions';
 
-export default class SettingsPage extends React.Component {
+class SettingsPage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      paths: [],
+      masterName: 'Не указано',
+    };
+  }
+
+  componentDidMount() {
     storage.has(storage_portfolioKey, (err, hasKey) => {
       if (hasKey) {
         storage.get(storage_portfolioKey, (err, data) => {
@@ -34,9 +56,13 @@ export default class SettingsPage extends React.Component {
         });
       }
     });
-    this.state = {
-      paths: [],
-    };
+    storage.has(storage_masterNameKey, (err, hasKey) => {
+      if (hasKey) {
+        storage.get(storage_masterNameKey, (err, data) => {
+          this.setMasterName(data.name);
+        });
+      }
+    });
   }
 
   render() {
@@ -48,10 +74,11 @@ export default class SettingsPage extends React.Component {
           <PageWrapper>
             <SPageControls>
               <Button onClick={this.showDialog}
-                      text="Добавить корневой каталог портфолио"/>
+                      text="Изменить корневой каталог портфолио"/>
             </SPageControls>
-            <STable>
-              {this.renderHeader()}
+            <SSettingsHeader>Корневые каталоги:</SSettingsHeader>
+            <SPathsTable>
+              {this.renderPathTableHeader()}
               {paths && paths.length ?
                   <STableBody>
                     {paths.map((path, index) =>
@@ -60,13 +87,22 @@ export default class SettingsPage extends React.Component {
                           {this.renderActions(path)}
                         </SPathsRow>)}
                   </STableBody> : null}
-            </STable>
+            </SPathsTable>
+            <SSettingsHeader>Учебный мастер, использующий
+              программу:</SSettingsHeader>
+            <SMasterText>{this.state.masterName}</SMasterText>
+            <SChangeAction>
+              <span
+                  onClick={this.showEditMasterNameModal}>
+                Изменить
+              </span>
+            </SChangeAction>
           </PageWrapper>
         </Container>
     );
   }
 
-  renderHeader() {
+  renderPathTableHeader() {
     const titles = ['Путь до портфолио', 'Действия'];
 
     return (
@@ -108,7 +144,7 @@ export default class SettingsPage extends React.Component {
   addPaths = (paths: Array<string>) => {
     paths.forEach(path => {
       if (this.state.paths.findIndex(item => item === path) === -1) {
-        const newState = [path].concat(this.state.paths);
+        const newState = [path];
 
         storage.set(storage_portfolioKey, {paths: newState}, (err) => {
           if (!err) {
@@ -117,6 +153,31 @@ export default class SettingsPage extends React.Component {
             alert('oops, somehting goes wrong'); //TODO write normal err handler
           }
         });
+      }
+    });
+  };
+
+  showEditMasterNameModal = () => {
+    const info = {
+      title: 'Изменить имя учебного мастера',
+      content: <EditFieldTemplate
+          onSubmit={(newValue) => this.editMasterName(newValue)}
+          buttonText='Изменить имя'
+          oldValueLabel='Предыдущее имя учебного мастера'
+          oldValue={this.state.masterName}
+          closeModal={this.props.hideModal}
+      />,
+    };
+
+    this.props.openModal(info);
+  };
+
+  editMasterName = (newName: string) => {
+    storage.set(storage_masterNameKey, {name: newName}, (err) => {
+      if (!err) {
+        this.setMasterName(newName);
+      } else {
+        alert('oops, somehting goes wrong'); //TODO write normal err handler
       }
     });
   };
@@ -141,4 +202,17 @@ export default class SettingsPage extends React.Component {
   setPathsToState = (paths: Array<string>): void => {
     this.setState({paths});
   };
+
+  setMasterName = (masterName: string): void => {
+    this.setState({masterName});
+  };
 }
+
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = dispatch => ({
+  openModal: (info) => dispatch(showModal(info)),
+  hideModal: () => dispatch(hideModal()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsPage);

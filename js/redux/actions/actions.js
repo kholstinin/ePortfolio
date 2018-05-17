@@ -13,6 +13,7 @@ import {
   SHOW_WARNING_MODAL,
 } from './actionTypes';
 import * as React from 'react';
+import merge from 'lodash/merge';
 
 import initialisePortfolio from '../../common/initialisePortfolio';
 import Portfolio from '../../common/classes/portfolio';
@@ -69,6 +70,13 @@ function _updatePortfolio(withTree: boolean) {
         dispatch(setPortfolio('empty'));
       } else {
         if (withTree) {
+          const arrOfTrees = paths.map(path => dirTree(path));
+          const fullTree = {};
+          console.log(arrOfTrees);
+          arrOfTrees.forEach(tree => {
+            merge(fullTree, tree);
+          });
+          console.log(fullTree);
           tree = dirTree(paths[0]);
         }
 

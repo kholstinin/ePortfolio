@@ -18,3 +18,15 @@ export const SPage = styled.div`
   width: 1000px;
   height: 100%;
 `;
+
+export const SLoaderWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: ${props => props.loaded ? 'none' : 'block'};
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #fff;
+  opacity: 0.8;  
+  z-index: 100;
+`;

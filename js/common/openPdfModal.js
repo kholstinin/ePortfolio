@@ -27,10 +27,17 @@ export default function openWorks(
         width: widthOfWindow,
         height: heightOfWorkWindow,
         title: 'Проверка работ',
+        webPreferences: {
+          webSecurity: false,
+          devTools: true,
+        },
       });
 
+  //win.webContents.openDevTools();
+  //console.log(path.resolve(__dirname, 'pdfView.html'));
+
   win.loadURL(url.format({
-    pathname: path.join(__dirname, 'pdfView.html'),
+    pathname: path.resolve(__dirname, 'pdfView.html'),
     protocol: 'file:',
   }));
 

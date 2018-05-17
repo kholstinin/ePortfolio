@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const STableWrapper = styled.div`
-  height: 600px;
+  height: 660px;
   overflow-y: auto;
 `;
 
@@ -47,4 +47,13 @@ export const STableHeaderInput = styled.input`
 export const SWorkTableHeaderAction = styled.div`
   display: flex;
   flex-direction: column;    
+`;
+
+
+export const STableCell = styled.div`
+  display: table-cell;  
+`;
+
+export const STableRow = styled.div`
+  display: table-row;  
 `;

@@ -1,7 +1,7 @@
 // keys for databases
 
 export const storage_portfolioKey = 'pathsToPortfolio';
-
+export const storage_masterNameKey = 'masterName';
 
 //sizes of main container
 

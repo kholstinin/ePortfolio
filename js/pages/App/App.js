@@ -6,15 +6,15 @@ import WarningModal from '../../components/modals/warningModal/WarningModal';
 import EditModal from '../../components/modals/editModal/EditModal';
 import RouterPage from '../RouterPage';
 import Menu from '../../components/menu/Menu';
+import {fullUpdatePortfolio} from '../../redux/actions/actions';
 
 import {
   Container,
   Row,
   SPage,
+  SLoaderWrapper,
 } from './styles';
-import {
-  fullUpdatePortfolio,
-} from '../../redux/actions/actions';
+import {mainColor} from '../../common/palette';
 
 type TWrapperProps = {
   loading: boolean,
@@ -36,18 +36,21 @@ class Wrapper extends React.Component<TWrapperProps, {}> {
 
     return (
         <Container>
-          <WarningModal />
-          <EditModal />
+          <WarningModal/>
+          <EditModal/>
+          <SLoaderWrapper
+              loaded={!this.props.loading}
+          />
           <Loader loaded={!this.props.loading}
-                  color='#5c6bc0'
+                  color={mainColor}
                   length={0}
-                  scale={1.3} />
-            <Row>
-              <SPage>
-                <RouterPage/>
-              </SPage>
-              <Menu />
-            </Row>
+                  scale={1.3}/>
+          <Row>
+            <SPage>
+              <RouterPage/>
+            </SPage>
+            <Menu/>
+          </Row>
         </Container>
     );
   }

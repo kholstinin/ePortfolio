@@ -34,6 +34,7 @@ export default class Group {
         this.err = 'Нет такой группы';
       }
     }).catch(err => {
+      console.log(err);
       this.err = 'Нет такой группы';
       store.dispatch(addWrongWork(this));
     });

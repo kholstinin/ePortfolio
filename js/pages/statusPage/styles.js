@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {dangerColor, successColor} from '../../common/palette';
 
 export const SColumn = styled.div`
   display: flex;
@@ -42,4 +43,8 @@ export const SRow = styled.div`
   width: 100%;
   height: 650px;
   flex-direction: row;
+`;
+
+export const SWorkNumber = styled.span`
+  color: ${props => props.verified ? successColor : dangerColor};  
 `;

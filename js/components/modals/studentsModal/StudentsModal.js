@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../../button/Button';
 
+import Input from '../../input/Input';
 import SelectInput from '../../selectInput/SelectInput';
 import {
   getStudyTypes,
@@ -39,20 +40,20 @@ export default class StudentsModal extends React.Component<TGroupModalProps, TGr
           <SColumn>
             <SRow>
               <SLabel>Название группы:</SLabel>
-              <input
+              <Input
                   value={this.state.groupName}
                   onChange={(e) => this.setState(
                       {groupName: e.target.value})}/>
             </SRow>
             <SRow>
               <SLabel>Профиль:</SLabel>
-              <input value={this.state.profile}
+              <Input value={this.state.profile}
                      onChange={(e) => this.setState(
                          {profile: e.target.value})}/>
             </SRow>
             <SRow>
               <SLabel>Направление:</SLabel>
-              <input
+              <Input
                   value={this.state.direction}
                   onChange={(e) => this.setState(
                       {direction: e.target.value})}/>

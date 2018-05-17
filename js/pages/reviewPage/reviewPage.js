@@ -3,7 +3,12 @@ import {connect} from 'react-redux';
 
 import {Tooltip} from 'react-tippy';
 import Button from '../../components/button/Button';
-import {Container, PageWrapper, PageHeader, SPageControls} from '../../components/page/Page';
+import {
+  Container,
+  PageWrapper,
+  PageHeader,
+  SPageControls,
+} from '../../components/page/Page';
 
 import openWorks from '../../common/openPdfModal';
 import WorkFile from '../../common/classes/workFile';
@@ -22,6 +27,8 @@ import {
   SWorkTableCell,
   SWorkTableHeaderAction,
   STableHeaderInput,
+    STableCell,
+    STableRow
 } from './styles';
 
 import {getSingleWorkType} from '../../common/utils';
@@ -69,7 +76,13 @@ class ReviewPage extends React.Component {
               {this.props.works.length ? <SWorkTable>
                 {this.renderTableHeader()}
                 <SWorkTableBody>
-                  {works.map((work, index) => this.renderWork(work, index))}
+                  {works && works.length ?
+                      works.map((work, index) => this.renderWork(work, index)) :
+                      <STableRow>
+                        <STableCell/>
+                        <STableCell/>
+                        <STableCell style={{textAlign: 'center', paddingTop: '15px'}}>Работы не найдены</STableCell>
+                      </STableRow>}
                 </SWorkTableBody>
               </SWorkTable> : <span>Нет работ на проверку</span>}
             </STableWrapper>
@@ -105,7 +118,6 @@ class ReviewPage extends React.Component {
     const fieldNames = {
       groupInput: 'groupName',
       workTypeInput: 'workType',
-      workNumberInput: 'workNumber',
     };
 
     filters.forEach(filter => {
@@ -118,6 +130,11 @@ class ReviewPage extends React.Component {
           filteredWorks = filteredWorks.filter(
               work => work[fieldName].toLowerCase().includes(filterValue));
 
+        } else if (filter === 'workNumberInput') {
+          const fieldName = 'workNumber';
+
+          filteredWorks = filteredWorks.filter(
+              work => work[fieldName] === filterValue);
         } else if (filter === 'studentInput') {
           filteredWorks = filteredWorks.filter(
               work => {

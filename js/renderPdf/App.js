@@ -216,7 +216,12 @@ export default class App extends React.Component {
     const studentInfo = studentsInfoArr[currentWorkNumber];
     const disciplineFullName = workFiles[currentWorkNumber].disciplineFullName;
 
-    const {discipline, workType, workNumber} = fileInfo;
+    const {discipline, workType} = fileInfo;
+    let workNumber = fileInfo.workNumber;
+
+    if (workNumber === '') {
+      workNumber = 1;
+    }
 
     const id = getStudentId(studentInfo.groupName, studentInfo.fullName);
 

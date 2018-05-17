@@ -12,6 +12,7 @@ export const SGroupList = styled.ul`
   padding: 0;
   margin: 0;
   list-style: none;
+  overflow: auto;
 `;
 
 export const SGroupListItem = styled.li`

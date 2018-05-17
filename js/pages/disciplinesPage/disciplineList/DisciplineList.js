@@ -1,5 +1,5 @@
 import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import {mainColor} from '../../../common/palette';
 import {
@@ -9,7 +9,7 @@ import {
   SDisciplineListInputClear,
   SDisciplineListHeader,
   SDisciplineListInputWrapper,
-  SDisciplineListInput,
+  SDisciplineListInput
 } from './styles';
 
 export default class DisciplineList extends React.Component {
@@ -20,9 +20,12 @@ export default class DisciplineList extends React.Component {
         <SDisciplineListWrapper>
           <SDisciplineListHeader>Список дисциплин</SDisciplineListHeader>
           <SDisciplineListInputWrapper>
-            <SDisciplineListInput value={this.props.disciplineInput}
-                                  onChange={(e) => this.props.onInputChange(
-                                      e.target.value)}/>
+            <SDisciplineListInput
+                value={this.props.disciplineInput}
+                width='100'
+                height='20'
+                onChange={(e) => this.props.onInputChange(
+                    e.target.value)}/>
             <SDisciplineListInputClear
                 onClick={() => this.props.onInputChange('')}>
               <FontAwesomeIcon

@@ -6,15 +6,17 @@ import store from './redux/store';
 const storage = require('electron-json-storage');
 import {injectGlobal} from 'styled-components';
 
-import fontawesome from '@fortawesome/fontawesome'
+import fontawesome from '@fortawesome/fontawesome';
 import faSync from '@fortawesome/fontawesome-free-solid/faSync';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faTimesCircle from '@fortawesome/fontawesome-free-solid/faTimesCircle';
 import angleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
 import angleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft';
 import pencil from '@fortawesome/fontawesome-free-solid/faPencilAlt';
+import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
 
-fontawesome.library.add(faSync, faTimes, faTimesCircle, angleRight, angleLeft, pencil);
+fontawesome.library.add(faSync, faTimes, faTimesCircle, angleRight, angleLeft,
+    pencil, faCheck);
 
 import App from './pages/App/App';
 

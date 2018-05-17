@@ -1,8 +1,8 @@
-import type {TStatusPageProps,TStatusPageState} from './typings';
+import type {TStatusPageProps, TStatusPageState} from './typings';
 import type {TStudentPortfolio} from '../../typings/Portfolio';
 
 import React from 'react';
-import {portfDB} from '../../common/databases';
+import {portfDB, discDB} from '../../common/databases';
 
 import Button from '../../components/button/Button';
 import {
@@ -19,10 +19,15 @@ import {
   SWorksColumn,
   SColumnItem,
   SRow,
+  SWorkNumber,
 } from './styles';
 
 import {getDocs} from '../../common/utils';
 import {getNameWithInitials} from '../../common/nameSplit';
+import DisciplineWorks from '../../common/disciplineWorks';
+import type {TDisciplineInfo} from '../../typings/Discipline';
+import ComparePortfolioWithDiscipline
+  from '../../common/comparePortfolioWithDiscipline';
 
 export default class StatusPage extends React.Component<TStatusPageProps, TStatusPageState> {
   constructor(props) {
@@ -38,21 +43,21 @@ export default class StatusPage extends React.Component<TStatusPageProps, TStatu
   }
 
   componentDidMount() {
-    portfDB.allDocs({include_docs: true}).then(result => {
-      const portfolio = getDocs(result.rows);
+    portfDB.allDocs({include_docs: true}).then(portfDocs => {
+      const portfolio = getDocs(portfDocs.rows);
+      discDB.allDocs({include_docs: true}).then(discDocs => {
+        const disciplines = getDocs(discDocs.rows);
 
-      this.setState({
-        portfolio: portfolio,
-        groups: this.getGroups(portfolio),
+        this.setState({
+          portfolio: portfolio,
+          groups: this.getGroups(portfolio),
+          disciplines: disciplines,
+        });
       });
     });
   }
 
   render() {
-    const {groups, activeGroupName} = this.state;
-
-    const activeGroup = groups.find(
-        group => group.groupName === activeGroupName);
 
     return <Container>
       <PageHeader text='Статус портфолио'/>
@@ -65,27 +70,11 @@ export default class StatusPage extends React.Component<TStatusPageProps, TStatu
         <SRow>
           <SGroupColumn>
             <SColumnHeader>Группы</SColumnHeader>
-            {groups &&
-            groups.map(
-                (item, index) => <SColumnItem
-                    onClick={() => this.setState(
-                        {
-                          activeGroupName: item.groupName,
-                          activeStudent: {},
-                          activeDiscipline: {},
-                        })}
-                    key={index}>{item.groupName}</SColumnItem>)}
+            {this.renderGroups()}
           </SGroupColumn>
           <SStudentsColumn>
             <SColumnHeader>Студенты</SColumnHeader>
-            {activeGroup && activeGroup.students.map(
-                (student, index) => <SColumnItem
-                    onClick={() => this.setState({
-                      activeStudent: student,
-                      activeDiscipline: {},
-                    })}
-                    key={index}>{getNameWithInitials(
-                    student.name)}</SColumnItem>)}
+            {this.renderStudents()}
           </SStudentsColumn>
           <SDisciplinesColumn>
             <SColumnHeader>Дисциплины</SColumnHeader>
@@ -100,26 +89,89 @@ export default class StatusPage extends React.Component<TStatusPageProps, TStatu
     </Container>;
   }
 
+  renderGroups() {
+    const {groups} = this.state;
+
+    if (!groups) {
+      return null;
+    }
+
+    return groups.map(
+        (item, index) => <SColumnItem
+            onClick={() => this.setState(
+                {
+                  activeGroupName: item.groupName,
+                  activeStudent: {},
+                  activeDiscipline: {},
+                })}
+            key={index}>{item.groupName}</SColumnItem>);
+  }
+
+  renderStudents() {
+    const activeGroup = this.state.groups.find(
+        group => group.groupName === this.state.activeGroupName);
+
+    if (!activeGroup) {
+      return null;
+    }
+
+    const students = activeGroup.students.sort(
+        (student1, student2) => student1.name.surname > student2.name.surname);
+    return students.map(
+        (student, index) =>
+            <SColumnItem
+                onClick={() => this.setState({
+                  activeStudent: student,
+                  activeDiscipline: {},
+                })}
+                key={index}>
+              {getNameWithInitials(student.name)}
+            </SColumnItem>);
+  }
+
   renderWorks() {
     const {activeDiscipline} = this.state;
     if (!activeDiscipline.works) {
       return null;
     }
 
-    const works = this.state.activeDiscipline.works;
+    const currentWorks = this.state.activeDiscipline.works;
+    const worksByTypeArr = currentWorks.map(
+        work => this.getArrOfWorkByType(work));
+
+    const currentDiscipline = this.getDiscipline(
+        activeDiscipline.disciplineFullName);
 
     return (
-        works.map((work, index) => {
-          const worksByType = this.getArrOfWorkByType(work);
+        currentDiscipline.works.map((work, index) => {
+          const completedWorks = worksByTypeArr.find(
+              item => {
+                return item.workType === work.type;
+              });
+
           return (
               <div key={index}>
-                {worksByType.workType}<br/>
-                {worksByType.arrOfWorks.map((workNumber, index) => <span
-                    key={index}>{workNumber}{' '}</span>)}
+                {work.type}<br/>
+                {work.workNumbers.map((workNumber, index) =>
+                    <SWorkNumber
+                        verified={completedWorks && this.isWorkCompleted(
+                            completedWorks.arrOfWorks, workNumber)}
+                        key={index}>
+                      {workNumber}{' '}
+                    </SWorkNumber>)}
               </div>
           );
         })
     );
+  }
+
+  isWorkCompleted(arrOfWorks: Array<string>, workNumber: string) {
+    if (!arrOfWorks) {
+      return false;
+    }
+
+    return arrOfWorks.findIndex(
+        work => work.toString() === workNumber.toString()) !== -1;
   }
 
   getArrOfWorkByType(work: { [string]: boolean, workType: string }): { works: Array<string>, workType: string } {
@@ -138,19 +190,31 @@ export default class StatusPage extends React.Component<TStatusPageProps, TStatu
     };
   }
 
+  getDiscipline(disciplineFullName: string): TDisciplineInfo {
+    return this.state.disciplines.find(
+        item => item.fullName.toLowerCase() ===
+            disciplineFullName.toLowerCase());
+  }
+
   renderDisciplines() {
     const {activeStudent} = this.state;
 
     if (activeStudent && activeStudent.name) {
+      return activeStudent.portfolio.map((discipline, index) => {
+            const currentDiscipline = this.getDiscipline(
+                discipline.disciplineFullName);
+            const numbersOfWorks = new ComparePortfolioWithDiscipline(discipline,
+                currentDiscipline.works);
 
-      return activeStudent.portfolio.map((discipline, index) => (
-              <SColumnItem
-                  key={index}
-                  onClick={() => this.setState({activeDiscipline: discipline})}
-              >
-                {discipline.disciplineName}
-              </SColumnItem>
-          ),
+            return (
+                <SColumnItem
+                    key={index}
+                    onClick={() => this.setState({activeDiscipline: discipline})}
+                >
+                  {`${discipline.disciplineName} ${numbersOfWorks.getNumberOfPortfolioWorks()}/${numbersOfWorks.getNumberOfDisciplineWorks()}`}
+                </SColumnItem>
+            );
+          },
       );
     }
 

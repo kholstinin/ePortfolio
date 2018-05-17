@@ -24,13 +24,13 @@ function createMainWindow() {
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true,
-}));
+  }));
 
-win.on('closed', () => {
-  win = null;
-});
+  win.on('closed', () => {
+    win = null;
+  });
 
-win.webContents.openDevTools();
+  win.webContents.openDevTools();
 }
 
 app.on('ready', createMainWindow);

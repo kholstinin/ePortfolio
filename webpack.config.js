@@ -18,6 +18,10 @@ module.exports = {
 
   target: 'electron-main',
 
+  node: {
+    __dirname: false,
+  },
+
   devServer: {
     contentBase: './dist',
     publicPath: 'http://localhost:8080/built/',

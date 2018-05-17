@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import LeftMenu from '../../../components/tablePage/LeftMenu';
+import Input from '../../../components/input/Input';
 
 const hoverColor = '#eceff1';
 
@@ -11,6 +12,7 @@ export const SDisciplineList = styled.ul`
   padding: 0;
   margin: 0;
   list-style: none;
+  overflow: auto;
 `;
 
 export const SDisciplineListItem = styled.li`
@@ -28,7 +30,7 @@ export const SDisciplineListItem = styled.li`
 `;
 
 export const SDisciplineListHeader = styled.div`
-  width: 100%:
+  width: 100%;
   height: 20px;
   line-height: 20px;
   font-size: 18px;
@@ -36,16 +38,17 @@ export const SDisciplineListHeader = styled.div`
   text-align: center;
 `;
 
-export const SDisciplineListInput = styled.input`
-  width: 100px;
-  margin-bottom: 15px;
-`;
-
 export const SDisciplineListInputWrapper = styled.div`
+  width: 100%;
   position: relative;
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-bottom: 15px;
+`;
+
+export const SDisciplineListInput = Input.extend`
+
 `;
 
 export const SDisciplineListInputClear = styled.div`

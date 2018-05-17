@@ -44,6 +44,10 @@ export default class WorkFile {
     this.workNumber = number;
     this.workType = fileInfo.workType;
 
+    if (workType === 'Курсовая работа' || workType === 'Курсовой проект') {
+      this.workNumber = 1;
+    }
+
     const workTypeAbbr = getWorkTypeAbbr(workType);
     this.expectedFileName = getFileNameFromInfo(groupName, studentFullName,
         disciplineName, workTypeAbbr, number);
@@ -51,8 +55,8 @@ export default class WorkFile {
     if (this._validateWorkFile()) {
       let workStatus = {};
 
-      if (workTypePortfolioStatus && workTypePortfolioStatus[number]) {
-        workStatus = workTypePortfolioStatus[number];
+      if (workTypePortfolioStatus && workTypePortfolioStatus[this.workNumber]) {
+        workStatus = workTypePortfolioStatus[this.workNumber];
       }
 
       if (workStatus.status === false) {

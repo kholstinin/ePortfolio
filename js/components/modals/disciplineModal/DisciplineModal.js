@@ -1,3 +1,6 @@
+import type {TDisciplineInfo} from '../../../typings/Discipline';
+import type {TDisciplineModalProps, TDisciplineModalState} from './typings';
+
 import React from 'react';
 
 import Button from '../../button/Button';
@@ -14,9 +17,7 @@ import {
 import {getWorkObj, getStudyTypes} from '../../../common/utils';
 import SelectInput from '../../selectInput/SelectInput';
 
-import type {TDisciplineInfo} from '../../../typings/Discipline';
-import type {TDisciplineModalProps, TDisciplineModalState} from './typings';
-import Works from '../../../pages/disciplinesPage/Works';
+import DisciplineWorks from '../../../common/disciplineWorks';
 
 const inputWidth = 300;
 
@@ -25,7 +26,7 @@ export default class DisciplineModal extends React.Component<TDisciplineModalPro
     super(props);
 
     if (props.disciplineInfo.fullName) {
-      const works = new Works(props.disciplineInfo.works);
+      const works = new DisciplineWorks(props.disciplineInfo.works);
 
       this.state = {
         fullName: props.disciplineInfo.fullName,

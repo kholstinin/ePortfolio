@@ -8,7 +8,6 @@ import MenuItem from './MenuItem';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const menuItems = [
-  {name: 'Настройки', route: 'settings'},
   {name: 'Портфолио', route: 'portfolio'},
   {name: 'Ошибки', route: 'error'},
   {name: 'На проверку', route: 'review'},
@@ -16,6 +15,7 @@ const menuItems = [
   {name: 'Справки для печати', route: 'references'},
   {name: 'Список всех студентов', route: 'students'},
   {name: 'Рабочие программы', route: 'demands'},
+  {name: 'Настройки', route: 'settings'},
 ];
 
 import {

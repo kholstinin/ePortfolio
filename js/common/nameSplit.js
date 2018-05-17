@@ -63,7 +63,7 @@ function splitName(fullName: string): TStudentFullName {
   };
 }
 
-export function getNameWithInitials(fullName: TStudentFullName | string): string {
+export function getNameWithInitials(fullName: TStudentFullName | string, withDots: boolean): string {
   let fullNameObj;
 
   if (typeof fullName === 'string') {
@@ -74,7 +74,11 @@ export function getNameWithInitials(fullName: TStudentFullName | string): string
     throw new Error('Неправильное имя');
   }
 
-  const initials = `${fullNameObj.name[0]}${fullNameObj.patronymic[0]}`;
+  let initials = `${fullNameObj.name[0]}${fullNameObj.patronymic[0]}`;
+
+  if (withDots) {
+    initials = `${initials[0]}.${initials[1]}.`;
+  }
 
   return `${fullNameObj.surname} ${initials}`;
 }
