@@ -31,7 +31,7 @@
     "docxtemplater": "^3.6.3",
     "electron": "^2.0.0",
     "electron-json-storage": "^4.1.0",
-    "jszip": "^2.6.1",
+    "jszip": "^3.8.0",
     "jszip-utils": "0.0.2",
     "lodash": "^4.17.10",
     "pouchdb-browser": "^6.4.3",
